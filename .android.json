@@ -1,0 +1,1 @@
+{"orientation": "portrait", "include_pil": true, "expansion": false, "icon_name": "Keys", "include_sqlite": false, "permissions": ["VIBRATE"], "layout": "internal", "name": "Keys - The Worlds Most Frustrating Board Game", "package": "com.Keys", "source": true, "version": "1.0.0", "numeric_version": "10000"}
