@@ -18,7 +18,7 @@ except(ImportError):
 if android:
     #(0,0) makes the display the size of the physical screen
     #On android, we want this (varying resolutions, etc)
-    DISP = pygame.display.set_mode((0,0)) 
+    DISP = pygame.display.set_mode((0,0))
     DISPLAYHEIGHT = DISP.get_size()[0];
     DISPLAYWIDTH = DISP.get_size()[1];
 else:
@@ -68,7 +68,7 @@ class Turn:
 def _makeLocCartesian(Loc):
     returner = []
     locDic = {"A":1,"B":2,"C":3,"D":4,"E":5,"F":6,"G":7,"H":8}
-    
+
     returner.append(locDic[Loc[0]])
     returner.append(int(Loc[1]))
     return returner
@@ -79,14 +79,14 @@ def _makeLocAlphaNumeric(Loc):
     returner+=str(Loc[1])
     return returner
 def drawKeyAtLoc(DISP,key,loc):
-    
+
     if (key)!=None:
-        
+
         texture = key.getTexture()
         loc = _makeLocCartesian(loc)
         texture =pygame.transform.scale(texture,(DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
         DISP.blit(texture,(SWIDTH*(loc[1]-1),SHEIGHT*(loc[0]-1)))
-    
+
 def drawKeysOnBoard(DISP,Board):
     x = ['A','B','C','D','E','F','G','H']
     for i in x:
@@ -103,7 +103,7 @@ def drawLockedKeysOnBoard(DISP,Board):
             loc = i+str(e)
             key = Board.getLockedPieceAtLocation(loc)
             drawKeyAtLoc(DISP,key,loc)
-            
+
 def drawBoard(DisplayObj,color1=(0,0,0),color2=(255,255,255)):
     black = color1
     white = color2
@@ -134,8 +134,8 @@ def drawBoard(DisplayObj,color1=(0,0,0),color2=(255,255,255)):
     for i in range(8):
         if i %2 != 0:
             pygame.draw.rect(DisplayObj,white,(i*(DISPLAYHEIGHT/8),(DISPLAYWIDTH/8)*7,DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
-    
-    
+
+
 def highlightSquare(loc,DisplayObj,color):
     '''loc is a cartesian cordinate'''
     RectHeight = DISPLAYHEIGHT/16
@@ -146,23 +146,23 @@ def highlightSquare(loc,DisplayObj,color):
     #Drawing the outline of a square    [The x coordinate to HL   ]  [The y coordinate to HL ]
     #pygame.draw.rect(DisplayObj,color,((x)*(SWIDTH),(SHEIGHT)*(y),RectWidth,RectHeight)) #Leftline
     #pygame.draw.rect(DisplayObj,color,((x)*(DISPLAYHEIGHT/8),(DISPLAYWIDTH/8)*(y),RectHeight,RectWidth)) #TopLine
-    
-    
+
+
     #pygame.draw.rect(DisplayObj,color,
     #                 (x*(DISPLAYHEIGHT/8),(((DISPLAYWIDTH/8)*(y+1))-(DISPLAYWIDTH/128)),DISPLAYHEIGHT/8,DISPLAYHEIGHT/128))  #<---broken, need to fix
     #BottomLine^
     #pygame.draw.rect(DisplayObj,color,
     #                 ((((DISPLAYHEIGHT/8)*(loc[0]-1))+(DISPLAYHEIGHT/128)*18),(loc[1]-1)*(DISPLAYHEIGHT/8),DISPLAYWIDTH/128,DISPLAYHEIGHT/8)) #<---broken, need to fix
     #TopLine
-    
+
 def handleKeyPress(event,turn,respawn):
     shouldUpdate =1
     a = respawn.isRespawningNow
     z = getLocOfKeyPress(event)
 
-    
+
     tchange = False
-    
+
     lockedPieceAtDest = BOARD.getLockedPieceAtLocation(z)
     unlockedPieceAtDest = BOARD.getPieceAtLocation(z)
     if tuple(_makeLocCartesian(z)) in SQUARESTOHIGHLIGHT and not a:
@@ -182,7 +182,7 @@ def handleKeyPress(event,turn,respawn):
     elif tuple(_makeLocCartesian(z)) in ROTATEPOINTS and not a:
         direc = BOARD.getDirectionIndicatedByRotatePoint(_makeLocCartesian(z))
         piece = BOARD.getPieceAtLocation(turn.pieceSelected)
-        
+
         piece.setDirection(direc)
         BOARD.addPieceToLocation(BOARD.getPieceAtLocation(turn.pieceSelected).getLocation(),
                                  piece)
@@ -199,7 +199,7 @@ def handleKeyPress(event,turn,respawn):
             SQUARESTOHIGHLIGHT[:] =[]
             ROTATEPOINTS[:] = []
         for i in y:
-            
+
             remove = False
             if i in SQUARESTOHIGHLIGHT:
                 SQUARESTOHIGHLIGHT.remove(i)
@@ -228,6 +228,12 @@ def handleKeyPress(event,turn,respawn):
                 BOARD.addPieceToLocation(z,key)
             RESPAWNPOINTS[:] = []
             respawn.setRespawnOff()
+            for place in BOARD.board:
+                unlockedPiece = place[1]
+                lockedPiece = place[2]
+                if(not(unlockedPiece==None or lockedPiece==None)):
+                    if(lockedPiece.getTeam()==unlockedPiece.getTeam()):
+                        place[2] = None
     if tchange:
         turn.change()
 def getLocOfKeyPress(event):
@@ -238,7 +244,7 @@ def getLocOfKeyPress(event):
     #if False:
      #   if x[0] >DISPLAYWIDTH:
       #      x[0] = DISPLAYWIDTH
-       # 
+       #
         #if x[1] > DISPLAYHEIGHT:
          #   x[1] = DISPLAYHEIGHT
     returner = ""
@@ -260,7 +266,7 @@ def getLocOfKeyPress(event):
         returner += "G"
     elif pos[1] in range(((SHEIGHT)*7),(SHEIGHT)*8):
         returner += "H"
-    
+
     #numeric Part
     if pos[0] in range(SWIDTH):
         returner += "1"
@@ -279,8 +285,8 @@ def getLocOfKeyPress(event):
     elif pos[0] in range(((SWIDTH)*7),(SWIDTH)*8):
         returner += "8"
 
-    
-    
+
+
     return returner
 def drawGameOverScreen(Display,background=(0,0,0),winner="none"):
     Display.fill((0,0,0))
@@ -297,12 +303,12 @@ def main():
     drawBoard(background)
     shouldUpdate = 1
     pygame.init()
-    
+
     pygame.display.set_caption("Keys")
 
     keys = pygame.Surface((DISPLAYHEIGHT,DISPLAYWIDTH))
     drawKeysOnBoard(keys,BOARD)
-    
+
     DISP.blit(background,(0,0))
     DISP.blit(keys,(0,0))
     while True:
@@ -312,7 +318,7 @@ def main():
                 android.wait_for_resume()
 
         for event in pygame.event.get():
-            
+
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
@@ -328,7 +334,7 @@ def main():
             shouldUpdate= 1
         #pygame.display.update()
         shouldUpdate=1
-        
+
         if shouldUpdate:
             DISP.blit(background,(0,0))
             drawLockedKeysOnBoard(DISP,BOARD)
