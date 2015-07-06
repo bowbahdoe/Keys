@@ -110,7 +110,11 @@ class Key:
         return self.isLocked
     def setLocked(self,locked):
         '''True or False'''
-        self.texture = pygame.image.load("img/Black_Lock.png")
+        if self.team=="gold":
+            self.texture = pygame.image.load("img/gold_lock.png")
+        else:
+            self.texture = pygame.image.load("img/silver_lock.png")
+       # self.texture = pygame.image.load("img/Black_Lock.png")
         if locked:
             self.isLocked = True
         else:
