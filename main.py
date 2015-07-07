@@ -104,7 +104,7 @@ def drawLockedKeysOnBoard(DISP,Board):
             key = Board.getLockedPieceAtLocation(loc)
             drawKeyAtLoc(DISP,key,loc)
 
-def drawBoard(DisplayObj,color1=(0,0,0),color2=(255,255,255)):
+def drawBoard(DisplayObj,color1=(0,0,0),color2=(100,100,100)):
     black = color1
     white = color2
     DisplayObj.fill(black)
@@ -350,7 +350,6 @@ def main():
                 drawGameOverScreen(DISP,background,winner="none")
             pygame.display.update()
         fpsclock.tick(FPS)
-
 BOARD = Board()
 BOARD.setup()
 shouldUpdate = 1
