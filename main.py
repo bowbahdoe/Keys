@@ -1,6 +1,8 @@
 import sys
+from time import sleep
 from Board import Board
 from Key import Key
+from threading import Thread
 try:
     import pygame
     from pygame.locals import *
@@ -14,7 +16,7 @@ try:
     import android
 except(ImportError):
     android = None
-
+gameover = False
 if android:
     #(0,0) makes the display the size of the physical screen
     #On android, we want this (varying resolutions, etc)
@@ -288,11 +290,21 @@ def getLocOfKeyPress(event):
 
 
     return returner
+def resetGame():
+    print "resetting"
+    sleep(3)
+    BOARD.reset()
+    BOARD.isResetting= False
 def drawGameOverScreen(Display,background=(0,0,0),winner="none"):
     Display.fill((0,0,0))
-    myfont = pygame.font.SysFont("monospace", 40)
-    label = myfont.render(winner +" has Won!", 3, (21,123,0))
-    Display.blit(label, (SWIDTH, SHEIGHT))
+    try:
+        myfont = pygame.font.SysFont("monospace", 40)
+        label = myfont.render(winner +" has lost", 3, (DISP,0,0))
+        Display.blit(label, (SWIDTH, SHEIGHT))
+    except:
+        pass
+    fpsclock.tick(1)
+    pygame.display.update()
 def main():
     if android:
         android.init()
@@ -346,14 +358,20 @@ def main():
 
             for i in RESPAWNPOINTS:
                 highlightSquare((i[1],i[0]),DISP,(233,34,223))
-            if gameover:
-                drawGameOverScreen(DISP,background,winner="none")
+
+            if BOARD.isGameOver():
+                    #drawGameOverScreen(DISP,background,winner=turn.getTurn())
+                    fpsclock.tick(1)
+                    BOARD.reset()
+                #main()
+            print BOARD.isGameOver()
             pygame.display.update()
         fpsclock.tick(FPS)
+
 BOARD = Board()
 BOARD.setup()
 shouldUpdate = 1
 
-gameover = None
+
 if __name__ == "__main__":
     main()

@@ -34,15 +34,34 @@ class Board:
         #
         #The third item is for storing any locked keys
         #otherwise it will be None
+    def reset(self):
+        for location in self.board:
+            location[2]=None
+            location[1]=None
+        self.setup()
+    def isGameOver(self):
+        silver = 0
+        gold = 0
+        for location in self.board:
+            unlockedPiece = location[1]
+            if(unlockedPiece)!=None:
+                if(unlockedPiece.getTeam()=="gold"):
+                    gold+=1
+                else:
+                    silver+=1
+        if gold == 0 or silver == 0:
+            return True
+        else:
+            return False
     def _makeLocCartesian(self, Loc):
         returner = []
         locDic = {"A":1,"B":2,"C":3,"D":4,"E":5,"F":6,"G":7,"H":8}
-        
+
         returner.append(locDic[Loc[0]])
         returner.append(int(Loc[1]))
         return returner
     def _makeLocAlphaNumeric(self,Loc):
-        
+
         locDic = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H'}
         returner = ""
         returner+=(locDic[Loc[0]])
@@ -96,15 +115,15 @@ class Board:
         #just getting moved to the unlocked space
         Loc = self._findLocationIndexById(loc)
         if self.board[Loc][2]!= None:
-            
+
             self.board[Loc][2] = None
-            
+
         else:
             pass
     def isPieceAtLocation(self,loc):
         loc = self._findLocationIndexById(loc)
-        
-        if self.board[loc][1] != None:    
+
+        if self.board[loc][1] != None:
             return True
         else:
             return False
@@ -115,19 +134,19 @@ class Board:
         else:
             return False
     def getPieceAtLocation(self,loc):
-       
+
         if type(loc) != str:
 
             loc = self._makeLocAlphaNumeric(loc)
         Loc = self._findLocationIndexById(loc)
-        
+
         if self.isPieceAtLocation(loc):
             loc = self._findLocationIndexById(loc)
             return self.board[loc][1]
         else:
             return None
     def getLockedPieceAtLocation(self,loc):
-        
+
         if self.isLockedPieceAtLocation(loc):
             loc = self._findLocationIndexById(loc)
             return self.board[loc][2]
@@ -141,31 +160,31 @@ class Board:
             loc = self._makeLocCartesian(loc)
         done = False
         returner = []
-        
+
         if key.getDirection() == "North":
             oneabove = (loc[0]-1,loc[1])
-            
+
             while done == False:
-                
+
                 if oneabove[0] <1:
-                    
+
                     done = True
-                    
+
                 elif self.getPieceAtLocation(oneabove) == None:
-                    
+
                     returner.append(oneabove)
                     oneabove = (oneabove[0]-1,oneabove[1])
-                    
+
                 elif self.getPieceAtLocation(oneabove).getTeam() != key.getTeam():
                     returner.append(oneabove)
-                    
+
                     done = True
-                    
+
                 else:
-                    
+
                     done = True
-           
-                
+
+
             #done
         elif key.getDirection() == "NorthWest":
             upleft = (loc[0]-1,loc[1]-1)
@@ -233,19 +252,19 @@ class Board:
                 else:
                     done = True
         elif key.getDirection() == "South":
-            onebelow = (loc[0]+1,loc[1])   
+            onebelow = (loc[0]+1,loc[1])
             while done == False:
                 if onebelow[0] >8:
-                   
-                    done = True    
+
+                    done = True
                 elif self.getPieceAtLocation(onebelow) == None:
                     returner.append(onebelow)
                     onebelow = (onebelow[0]+1,onebelow[1])
                 elif self.getPieceAtLocation(onebelow).getTeam() != key.getTeam():
                     returner.append(onebelow)
-                    done = True     
+                    done = True
                 else:
-                    
+
                     done = True
         elif key.getDirection() == "SouthEast":
             downright = (loc[0]+1,loc[1]+1)
@@ -264,7 +283,7 @@ class Board:
         elif key.getDirection() == "East":
             oneright = (loc[0] ,loc[1] + 1)
             while done == False:
-                
+
                 if oneright[1] >8:
                     done = True
                 elif self.getPieceAtLocation(oneright) == None:
@@ -281,8 +300,8 @@ class Board:
         '''Seriosly, I need to do planning ahead before I
         do anything important. I always end up with about 20 stupid
         functions. Not-so-fun-ctions'''
-        
-       
+
+
         if tuple(loc) == self.oneright:
             return "East"
         elif tuple(loc) == self.downright:
@@ -300,17 +319,17 @@ class Board:
         elif tuple(loc) == self.oneabove:
             return "North"
 
-        
+
     def getRotatePointsofKeyAtLoc(self,loc):
         key = self.getPieceAtLocation(loc)
         if type(loc) == str:
             loc = self._makeLocCartesian(loc)
-            
+
         done = False
         returner = []
         self.oneright = (loc[0] ,loc[1] + 1)
         self.downright = (loc[0]+1,loc[1]+1)
-        self.onebelow = (loc[0]+1,loc[1])   
+        self.onebelow = (loc[0]+1,loc[1])
         self.downleft = (loc[0]+1,loc[1]-1)
         self.oneleft = (loc[0] ,loc[1]-1)
         self.upright = (loc[0]-1,loc[1]+1)
@@ -346,7 +365,7 @@ class Board:
         for loc in returner:
             if self._isLocOutOfBounds(loc):
                 returner.remove(loc)
-            
+
         return returner
     def getFreeRespawnPointsForTeam(self,team):
         gold = ["A2","A4","A6","A8"]
@@ -370,12 +389,12 @@ class Board:
 
         self.addPieceToLocation("A2",gold1)
         self.addPieceToLocation("A4",gold2)
-        self.addPieceToLocation("A6",gold3)    
+        self.addPieceToLocation("A6",gold3)
 
         silver1 = Key("H3","North",False,"silver")
         silver2 = Key("H5","North",False,"silver")
         silver3 = Key("H7","North",False,"silver")
-        
+
         self.addPieceToLocation("H3",silver1)
         self.addPieceToLocation("H5",silver2)
         self.addPieceToLocation("H7",silver3)
