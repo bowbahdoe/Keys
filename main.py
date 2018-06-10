@@ -4,6 +4,7 @@ import sys
 from time import sleep
 from Board import Board
 from Key import Key
+from location import makeLocCartesian, makeLocAlphaNumeric
 
 try:
     import pygame
@@ -69,25 +70,13 @@ class Turn:
             self.turn ="gold"
     def setSelected(self,loc):
         self.pieceSelected = loc
-def _makeLocCartesian(Loc):
-    returner = []
-    locDic = {"A":1,"B":2,"C":3,"D":4,"E":5,"F":6,"G":7,"H":8}
 
-    returner.append(locDic[Loc[0]])
-    returner.append(int(Loc[1]))
-    return returner
-def _makeLocAlphaNumeric(Loc):
-    locDic = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H'}
-    returner = ""
-    returner+=(locDic[Loc[0]])
-    returner+=str(Loc[1])
-    return returner
 def drawKeyAtLoc(DISP,key,loc):
 
     if (key)!=None:
 
         texture = key.getTexture()
-        loc = _makeLocCartesian(loc)
+        loc = makeLocCartesian(loc)
         texture =pygame.transform.scale(texture,(DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
         DISP.blit(texture,(SWIDTH*(loc[1]-1),SHEIGHT*(loc[0]-1)))
 
@@ -157,7 +146,7 @@ def handleKeyPress(event,turn,respawn):
 
     lockedPieceAtDest = BOARD.getLockedPieceAtLocation(z)
     unlockedPieceAtDest = BOARD.getPieceAtLocation(z)
-    if tuple(_makeLocCartesian(z)) in SQUARESTOHIGHLIGHT and not a:
+    if tuple(makeLocCartesian(z)) in SQUARESTOHIGHLIGHT and not a:
         if unlockedPieceAtDest!= None:
 
             if unlockedPieceAtDest.getTeam() != BOARD.getPieceAtLocation(turn.pieceSelected).getTeam():
@@ -171,8 +160,8 @@ def handleKeyPress(event,turn,respawn):
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         tchange = True
-    elif tuple(_makeLocCartesian(z)) in ROTATEPOINTS and not a:
-        direc = BOARD.getDirectionIndicatedByRotatePoint(_makeLocCartesian(z))
+    elif tuple(makeLocCartesian(z)) in ROTATEPOINTS and not a:
+        direc = BOARD.getDirectionIndicatedByRotatePoint(makeLocCartesian(z))
         piece = BOARD.getPieceAtLocation(turn.pieceSelected)
 
         piece.setDirection(direc)
@@ -210,8 +199,8 @@ def handleKeyPress(event,turn,respawn):
     if respawn.isRespawningNow:
         for i in BOARD.getFreeRespawnPointsForTeam(respawn.getTeamRespawning()):
             if i not in RESPAWNPOINTS:
-                RESPAWNPOINTS.append(_makeLocCartesian(i))
-        if (_makeLocCartesian(z)) in RESPAWNPOINTS:
+                RESPAWNPOINTS.append(makeLocCartesian(i))
+        if (makeLocCartesian(z)) in RESPAWNPOINTS:
             if respawn.getTeamRespawning() == "gold":
                 key = Key(z,"South",False,"gold")
                 BOARD.addPieceToLocation(z,key)
