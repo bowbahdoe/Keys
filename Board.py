@@ -37,8 +37,8 @@ class Board:
 
     def reset(self):
         for location in self.board:
-            location[2]=None
-            location[1]=None
+            location[2] = None
+            location[1] = None
         self.setup()
 
 
@@ -47,15 +47,13 @@ class Board:
         gold = 0
         for location in self.board:
             unlockedPiece = location[1]
-            if(unlockedPiece)!=None:
-                if(unlockedPiece.getTeam()=="gold"):
-                    gold+=1
+            if unlockedPiece != None:
+                if unlockedPiece.getTeam() == "gold":
+                    gold += 1
                 else:
-                    silver+=1
-        if gold == 0 or silver == 0:
-            return True
-        else:
-            return False
+                    silver += 1
+
+        return gold == 0 or silver == 0
 
 
     def _makeLocCartesian(self, Loc):
