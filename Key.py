@@ -6,6 +6,7 @@ try:
     import pygame
 except(ImportError):
     import pyj2d as pygame
+
 class Key:
     def __init__(self, location, direction, isLocked, team, selected=False):
         self.loc = location
@@ -22,51 +23,54 @@ class Key:
             self.texture = pygame.image.load("img/silver1.png")
         if self.team == "gold":
             if self.dir == "East":
-                self.texture = pygame.transform.rotate(self.baseTex,45)
+                self.texture = pygame.transform.rotate(self.baseTex, 45)
             elif self.dir == "SouthEast":
-                self.texture = pygame.transform.rotate(self.baseTex,360)
+                self.texture = pygame.transform.rotate(self.baseTex, 360)
             elif self.dir == "South":
-                self.texture = pygame.transform.rotate(self.baseTex,-40)
+                self.texture = pygame.transform.rotate(self.baseTex, -40)
             elif self.dir == "SouthWest":
-                self.texture = pygame.transform.rotate(self.baseTex,-90)
+                self.texture = pygame.transform.rotate(self.baseTex, -90)
             elif self.dir == "West":
-                self.texture = pygame.transform.rotate(self.baseTex,-135)
+                self.texture = pygame.transform.rotate(self.baseTex, -135)
             elif self.dir == "NorthWest":
-                self.texture = pygame.transform.rotate(self.baseTex,-180)
+                self.texture = pygame.transform.rotate(self.baseTex, -180)
             elif self.dir == "North":
-                self.texture = pygame.transform.rotate(self.baseTex,135)
+                self.texture = pygame.transform.rotate(self.baseTex, 135)
             elif self.dir == "NorthEast":
-                self.texture = pygame.transform.rotate(self.baseTex,90)
+                self.texture = pygame.transform.rotate(self.baseTex, 90)
 
 
         else:
             if self.dir == "East":
-                self.texture =pygame.transform.rotate(self.baseTex,-45)
-            if self.dir == "SouthEast":
-                self.texture =pygame.transform.rotate(self.baseTex,-90)
-            if self.dir == "South":
-                self.texture =pygame.transform.rotate(self.baseTex,-135)
-            if self.dir == "SouthWest":
-                self.texture =pygame.transform.rotate(self.baseTex,-180)
-            if self.dir == "West":
-                self.texture =pygame.transform.rotate(self.baseTex,135)
-            if self.dir == "NorthWest":
-                self.texture =pygame.transform.rotate(self.baseTex,90)
-            if self.dir == "North":
-                self.texture =pygame.transform.rotate(self.baseTex,45)
-            if self.dir == "NorthEast":
-                self.texture =pygame.transform.rotate(self.baseTex,0)
-
+                self.texture = pygame.transform.rotate(self.baseTex, -45)
+            elif self.dir == "SouthEast":
+                self.texture = pygame.transform.rotate(self.baseTex, -90)
+            elif self.dir == "South":
+                self.texture = pygame.transform.rotate(self.baseTex, -135)
+            elif self.dir == "SouthWest":
+                self.texture = pygame.transform.rotate(self.baseTex, -180)
+            elif self.dir == "West":
+                self.texture = pygame.transform.rotate(self.baseTex, 135)
+            elif self.dir == "NorthWest":
+                self.texture = pygame.transform.rotate(self.baseTex, 90)
+            elif self.dir == "North":
+                self.texture = pygame.transform.rotate(self.baseTex, 45)
+            elif self.dir == "NorthEast":
+                self.texture = pygame.transform.rotate(self.baseTex, 0)
 
         self.frame = 1
+
     def getLocation(self):
         return self.loc
-    def setLocation(self,Loc):
-        self.loc = Loc
+
+    def setLocation(self, loc):
+        self.loc = loc
+
     def getDirection(self):
         return self.dir
-    def setDirection(self,Dir):
-        self.dir = Dir
+
+    def setDirection(self, dir):
+        self.dir = dir
 
         if self.team == "gold":
             if self.dir == "East":
@@ -108,29 +112,34 @@ class Key:
 
     def isLocked(self):
         return self.isLocked
-    def setLocked(self,locked):
+
+    def setLocked(self, locked):
         '''True or False'''
         if self.team=="gold":
             self.texture = pygame.image.load("img/gold_lock.png")
         else:
             self.texture = pygame.image.load("img/silver_lock.png")
-       # self.texture = pygame.image.load("img/Black_Lock.png")
+
         if locked:
             self.isLocked = True
         else:
             self.isLocked = False
+
     def getTeam(self):
         return self.team
-    def setTeam(self,team):
+
+    def setTeam(self, team):
         if self.team == "gold":
             self.texture = pygame.image.load("img/key-icon.png")
         else:
             self.texture = pygame.image.load("img/silver1.png")
+
     def select(self):
         if self.isSelected:
             self.isSelected = False
         else:
             self.isSelected = True
+
     def _makeLocCartesian(self, Loc):
         returner = []
         locDic = {"A":1,"B":2,"C":3,"D":4,"E":5,"F":6,"G":7,"H":8}
@@ -138,6 +147,7 @@ class Key:
         returner.append(locDic[Loc[0]])
         returner.append(int(Loc[1]))
         return returner
+
     def _makeLocAlphaNumeric(self,Loc):
 
         locDic = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H'}
@@ -145,5 +155,6 @@ class Key:
         returner+=(locDic[Loc[0]])
         returner+=str(Loc[1])
         return returner
+
     def getTexture(self):
         return self.texture
