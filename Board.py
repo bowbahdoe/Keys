@@ -76,11 +76,8 @@ class Board:
 
     def _isLocOutOfBounds(self,loc):
         '''loc is cartesian here'''
-        if loc[0] > 8  or loc[0] <1:
-            return True
-        if loc[1] > 8 or loc[1] <1:
-            return True
-        return False
+        return loc[0] > 8 or loc[0] < 1
+            or loc[1] > 8 or loc[1] < 1
 
 
     def _findLocationIndexById(self,ID):
