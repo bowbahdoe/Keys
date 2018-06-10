@@ -272,7 +272,7 @@ def getLocOfKeyPress(event):
         returner += "8"
 
     return returner
-    
+
 def resetGame():
     print "resetting"
     sleep(3)
@@ -324,11 +324,9 @@ def main():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-                #for i in SQUARESTOHIGHLIGHT:
-                   # highlightSquare((i[1],i[0]),DISP,(213,23,12))
-            shouldUpdate= 1
-        #pygame.display.update()
-        shouldUpdate=1
+            shouldUpdate = 1
+
+        shouldUpdate = 1
 
         if shouldUpdate:
             DISP.blit(background,(0,0))
@@ -343,10 +341,9 @@ def main():
                 highlightSquare((i[1],i[0]),DISP,(233,34,223))
 
             if BOARD.isGameOver():
-                    #drawGameOverScreen(DISP,background,winner=turn.getTurn())
                     fpsclock.tick(1)
                     BOARD.reset()
-                #main()
+
             print BOARD.isGameOver()
             pygame.display.update()
         fpsclock.tick(FPS)
