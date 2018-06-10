@@ -39,10 +39,9 @@ fpsclock = pygame.time.Clock()
 
 
 SQUARESTOHIGHLIGHT = []
-
 ROTATEPOINTS = []
-
 RESPAWNPOINTS = []
+
 class Respawn:
     def __init__(self):
         self.isRespawningNow = False
@@ -57,6 +56,7 @@ class Respawn:
         return self.isRespawningNow
     def getTeamRespawning(self):
         return self.teamRespawning
+
 class Turn:
     def __init__(self):
         self.turn = "gold"
@@ -72,9 +72,7 @@ class Turn:
         self.pieceSelected = loc
 
 def drawKeyAtLoc(DISP,key,loc):
-
-    if (key)!=None:
-
+    if key != None:
         texture = key.getTexture()
         loc = makeLocCartesian(loc)
         texture =pygame.transform.scale(texture,(DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
@@ -199,6 +197,7 @@ def handleKeyPress(event,turn,respawn):
                         place[2] = None
     if tchange:
         turn.change()
+
 def getLocOfKeyPress(event):
 
     pos = [event.pos[0],event.pos[1]]
@@ -250,6 +249,7 @@ def resetGame():
     sleep(3)
     BOARD.reset()
     BOARD.isResetting= False
+
 def drawGameOverScreen(Display,background=(0,0,0),winner="none"):
     Display.fill((0,0,0))
     try:
@@ -260,6 +260,7 @@ def drawGameOverScreen(Display,background=(0,0,0),winner="none"):
         pass
     fpsclock.tick(1)
     pygame.display.update()
+    
 def main():
     if android:
         android.init()
