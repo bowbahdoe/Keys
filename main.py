@@ -16,7 +16,7 @@ try:
     import android
 except(ImportError):
     android = None
-gameover = False
+
 if android:
     #(0,0) makes the display the size of the physical screen
     #On android, we want this (varying resolutions, etc)
