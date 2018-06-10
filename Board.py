@@ -1,5 +1,4 @@
-import Key
-from Key import Key
+from key import Key
 from location import makeLocCartesian, makeLocAlphaNumeric
 
 class Board:

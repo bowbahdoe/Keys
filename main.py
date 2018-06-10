@@ -2,8 +2,8 @@ from __future__ import print_function
 
 import sys
 from time import sleep
-from Board import Board
-from Key import Key
+from board import Board
+from key import Key
 from location import makeLocCartesian, makeLocAlphaNumeric
 
 try:
