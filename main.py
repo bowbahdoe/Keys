@@ -145,17 +145,6 @@ def highlightSquare(loc,DisplayObj,color):
     x = loc[0]-1
     y = loc[1]-1
     pygame.draw.rect(DisplayObj,color,((x)*(SWIDTH),(SHEIGHT)*(y),SWIDTH,SHEIGHT),5)
-    #Drawing the outline of a square    [The x coordinate to HL   ]  [The y coordinate to HL ]
-    #pygame.draw.rect(DisplayObj,color,((x)*(SWIDTH),(SHEIGHT)*(y),RectWidth,RectHeight)) #Leftline
-    #pygame.draw.rect(DisplayObj,color,((x)*(DISPLAYHEIGHT/8),(DISPLAYWIDTH/8)*(y),RectHeight,RectWidth)) #TopLine
-
-
-    #pygame.draw.rect(DisplayObj,color,
-    #                 (x*(DISPLAYHEIGHT/8),(((DISPLAYWIDTH/8)*(y+1))-(DISPLAYWIDTH/128)),DISPLAYHEIGHT/8,DISPLAYHEIGHT/128))  #<---broken, need to fix
-    #BottomLine^
-    #pygame.draw.rect(DisplayObj,color,
-    #                 ((((DISPLAYHEIGHT/8)*(loc[0]-1))+(DISPLAYHEIGHT/128)*18),(loc[1]-1)*(DISPLAYHEIGHT/8),DISPLAYWIDTH/128,DISPLAYHEIGHT/8)) #<---broken, need to fix
-    #TopLine
 
 def handleKeyPress(event,turn,respawn):
     shouldUpdate =1
@@ -243,12 +232,7 @@ def getLocOfKeyPress(event):
     pos = [event.pos[0],event.pos[1]]
     if JAVA:
         pos = [event.pos[0]-3,event.pos[1]-25]
-    #if False:
-     #   if x[0] >DISPLAYWIDTH:
-      #      x[0] = DISPLAYWIDTH
-       #
-        #if x[1] > DISPLAYHEIGHT:
-         #   x[1] = DISPLAYHEIGHT
+
     returner = ""
     print pos
     #Alpha part
@@ -287,9 +271,8 @@ def getLocOfKeyPress(event):
     elif pos[0] in range(((SWIDTH)*7),(SWIDTH)*8):
         returner += "8"
 
-
-
     return returner
+    
 def resetGame():
     print "resetting"
     sleep(3)
