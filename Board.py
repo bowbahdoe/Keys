@@ -76,7 +76,7 @@ class Board:
 
     def _isLocOutOfBounds(self,loc):
         '''loc is cartesian here'''
-        return loc[0] > 8 or loc[0] < 1
+        return loc[0] > 8 or loc[0] < 1 \
             or loc[1] > 8 or loc[1] < 1
 
 
