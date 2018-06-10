@@ -7,9 +7,9 @@ try:
 except(ImportError):
     import pyj2d as pygame
 class Key:
-    def __init__(self,Location,Direction,isLocked,Team,selected=False):
-        self.Loc = Location
-        self.dir = Direction
+    def __init__(self, location, direction, isLocked, team, selected=False):
+        self.loc = location
+        self.dir = direction
         self.isLocked = isLocked
         self.team = Team
         self.isSelected = selected
@@ -60,9 +60,9 @@ class Key:
 
         self.frame = 1
     def getLocation(self):
-        return self.Loc
+        return self.loc
     def setLocation(self,Loc):
-        self.Loc = Loc
+        self.loc = Loc
     def getDirection(self):
         return self.dir
     def setDirection(self,Dir):
