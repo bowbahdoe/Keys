@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import sys
 from time import sleep
 from Board import Board
@@ -93,8 +95,7 @@ def drawKeysOnBoard(DISP,Board):
     x = ['A','B','C','D','E','F','G','H']
     for i in x:
         for e in range(8):
-            e+=1
-            loc = i+str(e)
+            loc = i+str(e + 1)
             key = Board.getPieceAtLocation(loc)
             drawKeyAtLoc(DISP,key,loc)
 
@@ -102,8 +103,7 @@ def drawLockedKeysOnBoard(DISP,Board):
     x = ['A','B','C','D','E','F','G','H']
     for i in x:
         for e in range(8):
-            e+=1
-            loc = i+str(e)
+            loc = i+str(e + 1)
             key = Board.getLockedPieceAtLocation(loc)
             drawKeyAtLoc(DISP,key,loc)
 
@@ -235,7 +235,7 @@ def getLocOfKeyPress(event):
         pos = [event.pos[0]-3,event.pos[1]-25]
 
     returner = ""
-    print pos
+    print(pos)
     #Alpha part
     if pos[1] in range(SHEIGHT):
         returner += "A"
@@ -275,7 +275,7 @@ def getLocOfKeyPress(event):
     return returner
 
 def resetGame():
-    print "resetting"
+    print("resetting")
     sleep(3)
     BOARD.reset()
     BOARD.isResetting= False
