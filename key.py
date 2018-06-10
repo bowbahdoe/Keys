@@ -96,12 +96,6 @@ class Key:
     def getTeam(self):
         return self.team
 
-    def setTeam(self, team):
-        if self.team == "gold":
-            self.texture = pygame.image.load("img/key-icon.png")
-        else:
-            self.texture = pygame.image.load("img/silver1.png")
-
     def select(self):
         self.isSelected = not self.isSelected
 
