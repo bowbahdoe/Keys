@@ -100,10 +100,10 @@ def drawBoard(DisplayObj,color1=(0,0,0),color2=(100,100,100)):
     DisplayObj.fill(color1)
     square_width = DISPLAYWIDTH / 8
     square_height = DISPLAYHEIGHT / 8
-    
+
     for row in range(8):
         for column in range(8):
-            if (column % 2 == 0 and row % 2 == 0) or (column % 2 == 1 and row  % 2 == 1):
+            if column % 2 == row % 2:
                 pygame.draw.rect(
                     DisplayObj,
                     color2,
