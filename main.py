@@ -344,7 +344,6 @@ def main():
                     fpsclock.tick(1)
                     BOARD.reset()
 
-            print BOARD.isGameOver()
             pygame.display.update()
         fpsclock.tick(FPS)
 
