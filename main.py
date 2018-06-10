@@ -2,7 +2,7 @@ import sys
 from time import sleep
 from Board import Board
 from Key import Key
-from threading import Thread
+
 try:
     import pygame
     from pygame.locals import *
