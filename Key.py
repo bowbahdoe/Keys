@@ -11,7 +11,7 @@ class Key:
         self.loc = location
         self.dir = direction
         self.isLocked = isLocked
-        self.team = Team
+        self.team = team
         self.isSelected = selected
 
         if self.team == "gold":
