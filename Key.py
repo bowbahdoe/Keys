@@ -135,10 +135,7 @@ class Key:
             self.texture = pygame.image.load("img/silver1.png")
 
     def select(self):
-        if self.isSelected:
-            self.isSelected = False
-        else:
-            self.isSelected = True
+        self.isSelected = not self.isSelected
 
     def _makeLocCartesian(self, Loc):
         returner = []

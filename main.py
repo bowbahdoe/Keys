@@ -97,6 +97,7 @@ def drawKeysOnBoard(DISP,Board):
             loc = i+str(e)
             key = Board.getPieceAtLocation(loc)
             drawKeyAtLoc(DISP,key,loc)
+
 def drawLockedKeysOnBoard(DISP,Board):
     x = ['A','B','C','D','E','F','G','H']
     for i in x:
