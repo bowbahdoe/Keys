@@ -22,21 +22,21 @@ class Key:
             self.texture = pygame.image.load("img/silver1.png")
         if self.team == "gold":
             if self.dir == "East":
-                self.texture =pygame.transform.rotate(self.baseTex,45)
-            if self.dir == "SouthEast":
-                self.texture =pygame.transform.rotate(self.baseTex,360)
-            if self.dir == "South":
-                self.texture =pygame.transform.rotate(self.baseTex,-40)
-            if self.dir == "SouthWest":
-                self.texture =pygame.transform.rotate(self.baseTex,-90)
-            if self.dir == "West":
-                self.texture =pygame.transform.rotate(self.baseTex,-135)
-            if self.dir == "NorthWest":
-                self.texture =pygame.transform.rotate(self.baseTex,-180)
-            if self.dir == "North":
-                self.texture =pygame.transform.rotate(self.baseTex,135)
-            if self.dir == "NorthEast":
-                self.texture =pygame.transform.rotate(self.baseTex,90)
+                self.texture = pygame.transform.rotate(self.baseTex,45)
+            elif self.dir == "SouthEast":
+                self.texture = pygame.transform.rotate(self.baseTex,360)
+            elif self.dir == "South":
+                self.texture = pygame.transform.rotate(self.baseTex,-40)
+            elif self.dir == "SouthWest":
+                self.texture = pygame.transform.rotate(self.baseTex,-90)
+            elif self.dir == "West":
+                self.texture = pygame.transform.rotate(self.baseTex,-135)
+            elif self.dir == "NorthWest":
+                self.texture = pygame.transform.rotate(self.baseTex,-180)
+            elif self.dir == "North":
+                self.texture = pygame.transform.rotate(self.baseTex,135)
+            elif self.dir == "NorthEast":
+                self.texture = pygame.transform.rotate(self.baseTex,90)
 
 
         else:
