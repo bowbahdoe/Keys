@@ -404,7 +404,7 @@ class Board:
         return returner
 
 
-    def getFreeRespawnPointsForTeam(self,team):
+    def getFreeRespawnPointsForTeam(self, team):
         gold = ["A2", "A4", "A6", "A8"]
         silver = ["H1", "H3", "H5", "H7"]
 
