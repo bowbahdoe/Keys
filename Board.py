@@ -1,5 +1,6 @@
 import Key
 from Key import Key
+from location import makeLocCartesian, makeLocAlphaNumeric
 
 class Board:
     '''Begin the ugliest attempt at making the logic for a chess board in
@@ -54,24 +55,6 @@ class Board:
                     silver += 1
 
         return gold == 0 or silver == 0
-
-
-    def _makeLocCartesian(self, Loc):
-        returner = []
-        locDic = {"A":1,"B":2,"C":3,"D":4,"E":5,"F":6,"G":7,"H":8}
-
-        returner.append(locDic[Loc[0]])
-        returner.append(int(Loc[1]))
-        return returner
-
-
-    def _makeLocAlphaNumeric(self,Loc):
-
-        locDic = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H'}
-        returner = ""
-        returner+=(locDic[Loc[0]])
-        returner+=str(Loc[1])
-        return returner
 
 
     def _isLocOutOfBounds(self,loc):
@@ -155,7 +138,7 @@ class Board:
 
         if type(loc) != str:
 
-            loc = self._makeLocAlphaNumeric(loc)
+            loc = makeLocAlphaNumeric(loc)
         Loc = self._findLocationIndexById(loc)
 
         if self.isPieceAtLocation(loc):
@@ -178,7 +161,7 @@ class Board:
         #So yeah, use with caution
         key = self.getPieceAtLocation(loc)
         if type(loc) == str:
-            loc = self._makeLocCartesian(loc)
+            loc = makeLocCartesian(loc)
         done = False
         returner = []
 
@@ -345,7 +328,7 @@ class Board:
     def getRotatePointsofKeyAtLoc(self,loc):
         key = self.getPieceAtLocation(loc)
         if type(loc) == str:
-            loc = self._makeLocCartesian(loc)
+            loc = makeLocCartesian(loc)
 
         done = False
         returner = []
