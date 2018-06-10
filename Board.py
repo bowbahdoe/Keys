@@ -405,18 +405,16 @@ class Board:
 
 
     def getFreeRespawnPointsForTeam(self,team):
-        gold = ["A2","A4","A6","A8"]
-        silver = ["H1","H3","H5","H7"]
-        returner = []
+        gold = ["A2", "A4", "A6", "A8"]
+        silver = ["H1", "H3", "H5", "H7"]
+
+        def isRespawnFree(location):
+            return self.getPieceAtLocation(location) == None
+
         if team == "gold":
-            for loc in gold:
-                if self.getPieceAtLocation(loc) == None:
-                    returner.append(loc)
-        if team == "silver":
-            for loc in silver:
-                if self.getPieceAtLocation(loc) == None:
-                    returner.append(loc)
-        return returner
+            return list(filter(isRespawnFree, gold))
+        else:
+            return list(filter(isRespawnFree, silver))
 
 
     def setup(self):
