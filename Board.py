@@ -149,20 +149,12 @@ class Board:
 
     def isPieceAtLocation(self,loc):
         loc = self._findLocationIndexById(loc)
-
-        if self.board[loc][1] != None:
-            return True
-        else:
-            return False
+        return self.board[loc][1] != None
 
 
     def isLockedPieceAtLocation(self,loc):
         loc = self._findLocationIndexById(loc)
-        if self.board[loc][2] != None:
-            return True
-        else:
-            return False
-
+        return self.board[loc][2] != None
 
     def getPieceAtLocation(self,loc):
 
