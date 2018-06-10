@@ -93,15 +93,6 @@ class Board:
         piece.setLocation(loc)
 
 
-    def removePieceAtLocation(self,loc):
-        Loc = self._findLocationIndexById(loc)
-        self.board(Loc)[1] = None
-
-
-    def removeLockedPieceAtLocation(self,loc):
-        pass
-
-
     def lockPieceAtLocation(self,loc):
         Loc = self._findLocationIndexById(loc)
         if self.board[Loc][1]!= None and self.board[2]==None:
