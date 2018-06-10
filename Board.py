@@ -34,11 +34,14 @@ class Board:
         #
         #The third item is for storing any locked keys
         #otherwise it will be None
+
     def reset(self):
         for location in self.board:
             location[2]=None
             location[1]=None
         self.setup()
+
+
     def isGameOver(self):
         silver = 0
         gold = 0
@@ -53,6 +56,8 @@ class Board:
             return True
         else:
             return False
+
+
     def _makeLocCartesian(self, Loc):
         returner = []
         locDic = {"A":1,"B":2,"C":3,"D":4,"E":5,"F":6,"G":7,"H":8}
@@ -60,6 +65,8 @@ class Board:
         returner.append(locDic[Loc[0]])
         returner.append(int(Loc[1]))
         return returner
+
+
     def _makeLocAlphaNumeric(self,Loc):
 
         locDic = {1:'A',2:'B',3:'C',4:'D',5:'E',6:'F',7:'G',8:'H'}
@@ -67,6 +74,8 @@ class Board:
         returner+=(locDic[Loc[0]])
         returner+=str(Loc[1])
         return returner
+
+
     def _isLocOutOfBounds(self,loc):
         '''loc is cartesian here'''
         if loc[0] > 8  or loc[0] <1:
@@ -74,10 +83,14 @@ class Board:
         if loc[1] > 8 or loc[1] <1:
             return True
         return False
+
+
     def _findLocationIndexById(self,ID):
         for square in self.board:
             if square[0] == ID:
                 return self.board.index(square)
+
+
     def movePieceToLocation(self,loc,piece):
         lastLoc = piece.getLocation()
         lastLocOnBoard = self._findLocationIndexById(lastLoc)
@@ -88,20 +101,30 @@ class Board:
 
         self.board[newLocOnBoard][1] = piece
         piece.setLocation(loc)
+
+
     def addPieceToLocation(self,loc,piece):
         newLocOnBoard = self._findLocationIndexById(loc)
         self.board[newLocOnBoard][1] = piece
         piece.setLocation(loc)
+
+
     def addLockedPieceToLocation(self,loc,piece):
         piece.setLocked(True)
         newLocOnBoard = self._findLocationIndexById(loc)
         self.board[newLocOnBoard][2] = piece
         piece.setLocation(loc)
+
+
     def removePieceAtLocation(self,loc):
         Loc = self._findLocationIndexById(loc)
         self.board(Loc)[1] = None
+
+
     def removeLockedPieceAtLocation(self,loc):
         pass
+
+
     def lockPieceAtLocation(self,loc):
         Loc = self._findLocationIndexById(loc)
         if self.board[Loc][1]!= None and self.board[2]==None:
@@ -110,6 +133,8 @@ class Board:
             self.board[Loc][2].setLocked(True)
         else:
             pass
+
+
     def unlockPieceAtLocation(self,loc):
         #TODO make it so the piece is reset to a spawn point instead of
         #just getting moved to the unlocked space
@@ -120,6 +145,8 @@ class Board:
 
         else:
             pass
+
+
     def isPieceAtLocation(self,loc):
         loc = self._findLocationIndexById(loc)
 
@@ -127,12 +154,16 @@ class Board:
             return True
         else:
             return False
+
+
     def isLockedPieceAtLocation(self,loc):
         loc = self._findLocationIndexById(loc)
         if self.board[loc][2] != None:
             return True
         else:
             return False
+
+
     def getPieceAtLocation(self,loc):
 
         if type(loc) != str:
@@ -145,13 +176,16 @@ class Board:
             return self.board[loc][1]
         else:
             return None
-    def getLockedPieceAtLocation(self,loc):
 
+
+    def getLockedPieceAtLocation(self,loc):
         if self.isLockedPieceAtLocation(loc):
             loc = self._findLocationIndexById(loc)
             return self.board[loc][2]
         else:
             pass
+
+
     def getValidMovesOfKeyAtLoc(self,loc):
         #This is the most complex and untested function
         #So yeah, use with caution
@@ -296,6 +330,7 @@ class Board:
                     done = True
 
         return returner
+
     def getDirectionIndicatedByRotatePoint(self,loc):
         '''Seriosly, I need to do planning ahead before I
         do anything important. I always end up with about 20 stupid
@@ -367,6 +402,8 @@ class Board:
                 returner.remove(loc)
 
         return returner
+
+
     def getFreeRespawnPointsForTeam(self,team):
         gold = ["A2","A4","A6","A8"]
         silver = ["H1","H3","H5","H7"]
@@ -380,21 +417,23 @@ class Board:
                 if self.getPieceAtLocation(loc) == None:
                     returner.append(loc)
         return returner
+
+
     def setup(self):
         '''This function, as of now, sets up the pieces how
             we have them at the beggining of a game'''
-        gold1 = Key("A2","South",False,"gold")
-        gold2 = Key("A4","South",False,"gold")
-        gold3 = Key("A6","South",False,"gold")
+        gold1 = Key("A2", "South", False, "gold")
+        gold2 = Key("A4", "South", False, "gold")
+        gold3 = Key("A6", "South", False, "gold")
 
-        self.addPieceToLocation("A2",gold1)
-        self.addPieceToLocation("A4",gold2)
-        self.addPieceToLocation("A6",gold3)
+        self.addPieceToLocation("A2", gold1)
+        self.addPieceToLocation("A4", gold2)
+        self.addPieceToLocation("A6", gold3)
 
-        silver1 = Key("H3","North",False,"silver")
-        silver2 = Key("H5","North",False,"silver")
-        silver3 = Key("H7","North",False,"silver")
+        silver1 = Key("H3", "North", False, "silver")
+        silver2 = Key("H5", "North", False, "silver")
+        silver3 = Key("H7", "North", False, "silver")
 
-        self.addPieceToLocation("H3",silver1)
-        self.addPieceToLocation("H5",silver2)
-        self.addPieceToLocation("H7",silver3)
+        self.addPieceToLocation("H3", silver1)
+        self.addPieceToLocation("H5", silver2)
+        self.addPieceToLocation("H7", silver3)
