@@ -97,36 +97,18 @@ def drawLockedKeysOnBoard(DISP,Board):
             drawKeyAtLoc(DISP,key,loc)
 
 def drawBoard(DisplayObj,color1=(0,0,0),color2=(100,100,100)):
-    black = color1
-    white = color2
-    DisplayObj.fill(black)
-    #Dont ask
-    #Just know it draws a chessboard
-    for i in range(7):
-        if i %2 == 0:
-            pygame.draw.rect(DisplayObj,white,(i*(DISPLAYHEIGHT/8),0,DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
-    for i in range(8):
-        if i %2 != 0:
-           pygame.draw.rect(DisplayObj,white,(i*(DISPLAYHEIGHT/8),(DISPLAYWIDTH/8),DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
-    for i in range(7):
-        if i %2 == 0:
-            pygame.draw.rect(DisplayObj,white,(i*(DISPLAYHEIGHT/8),(DISPLAYWIDTH/8)*2,DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
-    for i in range(8):
-        if i %2 != 0:
-            pygame.draw.rect(DisplayObj,white,(i*(DISPLAYHEIGHT/8),(DISPLAYWIDTH/8)*3,DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
-    for i in range(7):
-        if i %2 == 0:
-            pygame.draw.rect(DisplayObj,white,(i*(DISPLAYHEIGHT/8),(DISPLAYWIDTH/8)*4,DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
-    for i in range(8):
-        if i %2 != 0:
-            pygame.draw.rect(DisplayObj,white,(i*(DISPLAYHEIGHT/8),(DISPLAYWIDTH/8)*5,DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
-    for i in range(7):
-        if i %2 == 0:
-            pygame.draw.rect(DisplayObj,white,(i*(DISPLAYHEIGHT/8),(DISPLAYWIDTH/8)*6,DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
-    for i in range(8):
-        if i %2 != 0:
-            pygame.draw.rect(DisplayObj,white,(i*(DISPLAYHEIGHT/8),(DISPLAYWIDTH/8)*7,DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
-
+    DisplayObj.fill(color1)
+    square_width = DISPLAYWIDTH / 8
+    square_height = DISPLAYHEIGHT / 8
+    
+    for row in range(8):
+        for column in range(8):
+            if (column % 2 == 0 and row % 2 == 0) or (column % 2 == 1 and row  % 2 == 1):
+                pygame.draw.rect(
+                    DisplayObj,
+                    color2,
+                    (column * square_height, row * square_width, square_height, square_width)
+                )
 
 def highlightSquare(loc,DisplayObj,color):
     '''loc is a cartesian cordinate'''
