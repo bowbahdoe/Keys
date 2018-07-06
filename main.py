@@ -190,12 +190,8 @@ def handleKeyPress(event,turn,respawn):
                 BOARD.addPieceToLocation(z,key)
             RESPAWNPOINTS[:] = []
             respawn.setRespawnOff()
-            for place in BOARD.board:
-                unlockedPiece = place[1]
-                lockedPiece = place[2]
-                if(not(unlockedPiece==None or lockedPiece==None)):
-                    if lockedPiece.team == unlockedPiece.team:
-                        place[2] = None
+            BOARD.collapse_locked()
+            
     if tchange:
         turn.change()
 

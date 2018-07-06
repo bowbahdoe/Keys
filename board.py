@@ -125,6 +125,10 @@ class Board:
         else:
             pass
 
+    @only_cartesian_locations
+    def removeLockedPiece(self, cartesian_loc):
+        loc = self._findLocationIndexById(cartesian_loc)
+        self.board[loc][2] = None
 
     def isPieceAtLocation(self,loc):
         loc = self._findLocationIndexById(loc)
@@ -408,3 +412,13 @@ class Board:
         self.addPieceToLocation("H3", silver1)
         self.addPieceToLocation("H5", silver2)
         self.addPieceToLocation("H7", silver3)
+
+    def collapse_locked(self):
+        """If a cell has a locked key and an unlocked key
+        of the same team, deletes the locked key."""
+        for place in self.board:
+            unlockedPiece = place[1]
+            lockedPiece = place[2]
+            if(not(unlockedPiece==None or lockedPiece==None)):
+                if lockedPiece.team == unlockedPiece.team:
+                    place[2] = None
