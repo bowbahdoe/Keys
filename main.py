@@ -3,6 +3,7 @@ from __future__ import print_function
 import sys
 import logging_setup
 import logging
+import itertools
 from time import sleep
 from board import Board
 from key import Key
@@ -82,18 +83,19 @@ def drawKeyAtLoc(DISP, key, loc):
         DISP.blit(texture, (SWIDTH*(loc[1]-1), SHEIGHT*(loc[0]-1)))
 
 def drawKeysOnBoard(DISP,Board):
-    for i in range(1, 9):
-        for e in range(1, 9):
-            loc = [i, e]
-            key = Board.getPieceAtLocation(loc)
-            drawKeyAtLoc(DISP, key, loc)
+    for loc in all_locations():
+        key = Board.getPieceAtLocation(loc)
+        drawKeyAtLoc(DISP, key, loc)
 
 def drawLockedKeysOnBoard(DISP,Board):
-    for i in range(1, 9):
-        for e in range(1, 9):
-            loc = [i, e]
-            key = Board.getLockedPieceAtLocation(loc)
-            drawKeyAtLoc(DISP, key, loc)
+    for loc in all_locations():
+        key = Board.getLockedPieceAtLocation(loc)
+        drawKeyAtLoc(DISP, key, loc)
+
+def all_locations():
+    """Returns an iterator over all the possible cartesian locations
+    on an 8x8 board"""
+    return itertools.product(range(1, 9), range(1, 9))
 
 def drawBoard(DisplayObj,color1=(0,0,0),color2=(100,100,100)):
     DisplayObj.fill(color1)
@@ -191,7 +193,7 @@ def handleKeyPress(event,turn,respawn):
             RESPAWNPOINTS[:] = []
             respawn.setRespawnOff()
             BOARD.collapse_locked()
-            
+
     if tchange:
         turn.change()
 
