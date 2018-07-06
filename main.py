@@ -1,10 +1,14 @@
 from __future__ import print_function
 
 import sys
+import logging_setup
+import logging
 from time import sleep
 from board import Board
 from key import Key
 from location import makeLocCartesian, makeLocAlphaNumeric
+
+log = logging.getLogger(__name__)
 
 try:
     import pygame
@@ -205,7 +209,7 @@ def getLocOfKeyPress(event):
         pos = [event.pos[0]-3,event.pos[1]-25]
 
     returner = ""
-    print(pos)
+    log.debug("User clicked at %s", pos)
     #Alpha part
     if pos[1] in range(SHEIGHT):
         returner += "A"

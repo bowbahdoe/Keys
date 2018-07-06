@@ -1,5 +1,8 @@
 import functools
+import logging
 from location import makeLocCartesian
+
+log = logging.getLogger(__name__)
 
 def only_cartesian_locations(method):
     """Function decorator to ease transition from
@@ -13,6 +16,7 @@ def only_cartesian_locations(method):
     @functools.wraps(method)
     def wrapped(self, loc, *args, **kwargs):
         if type(loc) == str:
+            log.info("String location intercepted in method %s: %s", method, loc)
             loc = makeLocCartesian(loc)
         return method(self, loc, *args, **kwargs)
 
