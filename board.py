@@ -1,3 +1,5 @@
+import collections
+
 from key import Key
 from location import makeLocCartesian, makeLocAlphaNumeric
 from port_utils import only_cartesian_locations
@@ -35,6 +37,7 @@ class Board:
         #
         #The third item is for storing any locked keys
         #otherwise it will be None
+        self._board = collections.defaultdict(lambda: {'unlocked': None, 'locked': None})
 
     def reset(self):
         for location in self.board:
@@ -46,8 +49,18 @@ class Board:
     def isGameOver(self):
         silver = 0
         gold = 0
+
         for location in self.board:
             unlockedPiece = location[1]
+            if unlockedPiece != None:
+                if unlockedPiece.team == "gold":
+                    gold += 1
+                else:
+                    silver += 1
+
+        # Calculate based on new board
+        for location in self._board.values():
+            unlocked_piece = location['unlocked']
             if unlockedPiece != None:
                 if unlockedPiece.team == "gold":
                     gold += 1
