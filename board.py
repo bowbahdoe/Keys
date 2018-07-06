@@ -48,7 +48,7 @@ class Board:
         for location in self.board:
             unlockedPiece = location[1]
             if unlockedPiece != None:
-                if unlockedPiece.getTeam() == "gold":
+                if unlockedPiece.team == "gold":
                     gold += 1
                 else:
                     silver += 1
@@ -169,7 +169,7 @@ class Board:
                     returner.append(oneabove)
                     oneabove = (oneabove[0]-1,oneabove[1])
 
-                elif self.getPieceAtLocation(oneabove).getTeam() != key.getTeam():
+                elif self.getPieceAtLocation(oneabove).team != key.team:
                     returner.append(oneabove)
 
                     done = True
@@ -189,7 +189,7 @@ class Board:
                 elif self.getPieceAtLocation(upleft) == None:
                     returner.append(upleft)
                     upleft = (upleft[0]-1 ,upleft[1]-1)
-                elif self.getPieceAtLocation(upleft).getTeam() != key.getTeam():
+                elif self.getPieceAtLocation(upleft).team != key.team:
                     returner.append(upleft)
                     done = True
                 else:
@@ -203,7 +203,7 @@ class Board:
                 elif self.getPieceAtLocation(upright) == None:
                     returner.append(upright)
                     upright = (upright[0]-1 ,upright[1]+1)
-                elif self.getPieceAtLocation(upright).getTeam() != key.getTeam():
+                elif self.getPieceAtLocation(upright).team != key.team:
                     returner.append(upright)
                     done = True
                 else:
@@ -216,7 +216,7 @@ class Board:
                 elif self.getPieceAtLocation(oneleft) == None:
                     returner.append(oneleft)
                     oneleft = (oneleft[0] ,oneleft[1]-1)
-                elif self.getPieceAtLocation(oneleft).getTeam() != key.getTeam():
+                elif self.getPieceAtLocation(oneleft).team != key.team:
                     returner.append(oneleft)
                     done = True
                 else:
@@ -240,7 +240,7 @@ class Board:
                 elif self.getPieceAtLocation(downleft) == None:
                     returner.append(downleft)
                     downleft = (downleft[0]+1 ,downleft[1]-1)
-                elif self.getPieceAtLocation(downleft).getTeam() != key.getTeam():
+                elif self.getPieceAtLocation(downleft).team != key.team:
                     returner.append(downleft)
                     done = True
                 else:
@@ -254,7 +254,7 @@ class Board:
                 elif self.getPieceAtLocation(onebelow) == None:
                     returner.append(onebelow)
                     onebelow = (onebelow[0]+1,onebelow[1])
-                elif self.getPieceAtLocation(onebelow).getTeam() != key.getTeam():
+                elif self.getPieceAtLocation(onebelow).team != key.team:
                     returner.append(onebelow)
                     done = True
                 else:
@@ -269,7 +269,7 @@ class Board:
                 elif self.getPieceAtLocation(downright) == None:
                     returner.append(downright)
                     downright = (downright[0]+1 ,downright[1]+1)
-                elif self.getPieceAtLocation(downright).getTeam() != key.getTeam():
+                elif self.getPieceAtLocation(downright).team != key.team:
                     returner.append(downright)
                     done = True
                 else:
@@ -283,7 +283,7 @@ class Board:
                 elif self.getPieceAtLocation(oneright) == None:
                     returner.append(oneright)
                     oneright = (oneright[0] ,oneright[1] + 1)
-                elif self.getPieceAtLocation(oneright).getTeam() != key.getTeam():
+                elif self.getPieceAtLocation(oneright).team != key.team:
                     returner.append(oneright)
                     done = True
                 else:

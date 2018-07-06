@@ -93,9 +93,6 @@ class Key:
         else:
             self.isLocked = False
 
-    def getTeam(self):
-        return self.team
-
     def select(self):
         self.isSelected = not self.isSelected
 

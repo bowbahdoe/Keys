@@ -129,11 +129,11 @@ def handleKeyPress(event,turn,respawn):
     if tuple(makeLocCartesian(z)) in SQUARESTOHIGHLIGHT and not a:
         if unlockedPieceAtDest!= None:
 
-            if unlockedPieceAtDest.getTeam() != BOARD.getPieceAtLocation(turn.pieceSelected).getTeam():
+            if unlockedPieceAtDest.team != BOARD.getPieceAtLocation(turn.pieceSelected).team:
                 BOARD.addLockedPieceToLocation(z,unlockedPieceAtDest)
         if lockedPieceAtDest != None:
-            if lockedPieceAtDest.getTeam() == BOARD.getPieceAtLocation(turn.pieceSelected).getTeam():
-                respawn.setRespawnOn(lockedPieceAtDest.getTeam())
+            if lockedPieceAtDest.team == BOARD.getPieceAtLocation(turn.pieceSelected).team:
+                respawn.setRespawnOn(lockedPieceAtDest.team)
                 #BOARD.unlockPieceAtLocation(z)
         BOARD.movePieceToLocation(z,BOARD.getPieceAtLocation(turn.pieceSelected))
 
@@ -150,7 +150,7 @@ def handleKeyPress(event,turn,respawn):
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         tchange = True
-    elif BOARD.isPieceAtLocation(z) and BOARD.getPieceAtLocation(z).getTeam() == turn.getTurn() and not a:
+    elif BOARD.isPieceAtLocation(z) and BOARD.getPieceAtLocation(z).team == turn.getTurn() and not a:
         turn.setSelected(z)
         y = BOARD.getValidMovesOfKeyAtLoc(z)
         y.sort()
@@ -193,7 +193,7 @@ def handleKeyPress(event,turn,respawn):
                 unlockedPiece = place[1]
                 lockedPiece = place[2]
                 if(not(unlockedPiece==None or lockedPiece==None)):
-                    if(lockedPiece.getTeam()==unlockedPiece.getTeam()):
+                    if lockedPiece.team == unlockedPiece.team:
                         place[2] = None
     if tchange:
         turn.change()
