@@ -31,8 +31,8 @@ else:
     DISPLAYHEIGHT = 600;
     DISPLAYWIDTH = 600;
     DISP = pygame.display.set_mode((DISPLAYHEIGHT,DISPLAYWIDTH))
-SWIDTH = DISPLAYHEIGHT/8
-SHEIGHT = DISPLAYWIDTH/8
+SWIDTH = DISPLAYHEIGHT//8
+SHEIGHT = DISPLAYWIDTH//8
 FPS = 12
 fpsclock = pygame.time.Clock()
 
@@ -75,7 +75,7 @@ def drawKeyAtLoc(DISP,key,loc):
     if key != None:
         texture = key.getTexture()
         loc = makeLocCartesian(loc)
-        texture =pygame.transform.scale(texture,(DISPLAYHEIGHT/8,DISPLAYWIDTH/8))
+        texture =pygame.transform.scale(texture,(DISPLAYHEIGHT//8,DISPLAYWIDTH//8))
         DISP.blit(texture,(SWIDTH*(loc[1]-1),SHEIGHT*(loc[0]-1)))
 
 def drawKeysOnBoard(DISP,Board):
@@ -96,8 +96,8 @@ def drawLockedKeysOnBoard(DISP,Board):
 
 def drawBoard(DisplayObj,color1=(0,0,0),color2=(100,100,100)):
     DisplayObj.fill(color1)
-    square_width = DISPLAYWIDTH / 8
-    square_height = DISPLAYHEIGHT / 8
+    square_width = DISPLAYWIDTH // 8
+    square_height = DISPLAYHEIGHT // 8
 
     for row in range(8):
         for column in range(8):
@@ -110,8 +110,8 @@ def drawBoard(DisplayObj,color1=(0,0,0),color2=(100,100,100)):
 
 def highlightSquare(loc,DisplayObj,color):
     '''loc is a cartesian cordinate'''
-    RectHeight = DISPLAYHEIGHT/16
-    RectWidth = DISPLAYHEIGHT/16
+    RectHeight = DISPLAYHEIGHT//16
+    RectWidth = DISPLAYHEIGHT//16
     x = loc[0]-1
     y = loc[1]-1
     pygame.draw.rect(DisplayObj,color,((x)*(SWIDTH),(SHEIGHT)*(y),SWIDTH,SHEIGHT),5)
@@ -260,7 +260,7 @@ def drawGameOverScreen(Display,background=(0,0,0),winner="none"):
         pass
     fpsclock.tick(1)
     pygame.display.update()
-    
+
 def main():
     if android:
         android.init()
