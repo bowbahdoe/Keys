@@ -35,9 +35,9 @@ else:
     DISPLAYHEIGHT = 600;
     DISPLAYWIDTH = 600;
     DISP = pygame.display.set_mode((DISPLAYHEIGHT,DISPLAYWIDTH))
-SWIDTH = DISPLAYHEIGHT//8
-SHEIGHT = DISPLAYWIDTH//8
-FPS = 12
+SWIDTH = DISPLAYWIDTH//8
+SHEIGHT = DISPLAYHEIGHT//8
+FPS = 30
 fpsclock = pygame.time.Clock()
 
 
@@ -75,28 +75,25 @@ class Turn:
     def setSelected(self,loc):
         self.pieceSelected = loc
 
-def drawKeyAtLoc(DISP,key,loc):
+def drawKeyAtLoc(DISP, key, loc):
     if key != None:
-        texture = key.getTexture()
-        loc = makeLocCartesian(loc)
-        texture =pygame.transform.scale(texture,(DISPLAYHEIGHT//8,DISPLAYWIDTH//8))
-        DISP.blit(texture,(SWIDTH*(loc[1]-1),SHEIGHT*(loc[0]-1)))
+        texture = key.texture
+        texture = pygame.transform.scale(texture, (SHEIGHT, SWIDTH))
+        DISP.blit(texture, (SWIDTH*(loc[1]-1), SHEIGHT*(loc[0]-1)))
 
 def drawKeysOnBoard(DISP,Board):
-    x = ['A','B','C','D','E','F','G','H']
-    for i in x:
-        for e in range(8):
-            loc = i+str(e + 1)
+    for i in range(1, 9):
+        for e in range(1, 9):
+            loc = [i, e]
             key = Board.getPieceAtLocation(loc)
-            drawKeyAtLoc(DISP,key,loc)
+            drawKeyAtLoc(DISP, key, loc)
 
 def drawLockedKeysOnBoard(DISP,Board):
-    x = ['A','B','C','D','E','F','G','H']
-    for i in x:
-        for e in range(8):
-            loc = i+str(e + 1)
+    for i in range(1, 9):
+        for e in range(1, 9):
+            loc = [i, e]
             key = Board.getLockedPieceAtLocation(loc)
-            drawKeyAtLoc(DISP,key,loc)
+            drawKeyAtLoc(DISP, key, loc)
 
 def drawBoard(DisplayObj,color1=(0,0,0),color2=(100,100,100)):
     DisplayObj.fill(color1)
@@ -148,7 +145,7 @@ def handleKeyPress(event,turn,respawn):
         direc = BOARD.getDirectionIndicatedByRotatePoint(makeLocCartesian(z))
         piece = BOARD.getPieceAtLocation(turn.pieceSelected)
 
-        piece.setDirection(direc)
+        piece.direction = direc
         BOARD.addPieceToLocation(BOARD.getPieceAtLocation(turn.pieceSelected).location,
                                  piece)
         SQUARESTOHIGHLIGHT[:] =[]

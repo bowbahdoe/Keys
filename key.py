@@ -15,7 +15,7 @@ SILVER_LOCKED_TEXTURE = pygame.image.load("img/silver_lock.png")
 class Key:
     def __init__(self, location, direction, isLocked, team, selected=False):
         self.location = location
-        self.dir = direction
+        self._direction = direction
         self.isLocked = isLocked
         self.team = team
         self.isSelected = selected
@@ -33,52 +33,50 @@ class Key:
     def _rotateTexture(self):
         """Transforms the texture of this Key to match its team and rotation"""
         if self.team == "gold":
-            if self.dir == "East":
-                self.texture =pygame.transform.rotate(self.baseTex,45)
-            if self.dir == "SouthEast":
-                self.texture =pygame.transform.rotate(self.baseTex,360)
-            if self.dir == "South":
-                self.texture =pygame.transform.rotate(self.baseTex,-40)
-            if self.dir == "SouthWest":
-                self.texture =pygame.transform.rotate(self.baseTex,-90)
-            if self.dir == "West":
-                self.texture =pygame.transform.rotate(self.baseTex,-135)
-            if self.dir == "NorthWest":
-                self.texture =pygame.transform.rotate(self.baseTex,-180)
-            if self.dir == "North":
-                self.texture =pygame.transform.rotate(self.baseTex,135)
-            if self.dir == "NorthEast":
-                self.texture =pygame.transform.rotate(self.baseTex,90)
+            if self._direction == "East":
+                self.texture = pygame.transform.rotate(self.baseTex,45)
+            if self._direction == "SouthEast":
+                self.texture = pygame.transform.rotate(self.baseTex,360)
+            if self._direction == "South":
+                self.texture = pygame.transform.rotate(self.baseTex,-40)
+            if self._direction == "SouthWest":
+                self.texture = pygame.transform.rotate(self.baseTex,-90)
+            if self._direction == "West":
+                self.texture = pygame.transform.rotate(self.baseTex,-135)
+            if self._direction == "NorthWest":
+                self.texture = pygame.transform.rotate(self.baseTex,-180)
+            if self._direction == "North":
+                self.texture = pygame.transform.rotate(self.baseTex,135)
+            if self._direction == "NorthEast":
+                self.texture = pygame.transform.rotate(self.baseTex,90)
 
 
         else:
-            if self.dir == "East":
-                self.texture =pygame.transform.rotate(self.baseTex,-45)
-            if self.dir == "SouthEast":
-                self.texture =pygame.transform.rotate(self.baseTex,-90)
-            if self.dir == "South":
-                self.texture =pygame.transform.rotate(self.baseTex,-135)
-            if self.dir == "SouthWest":
-                self.texture =pygame.transform.rotate(self.baseTex,-180)
-            if self.dir == "West":
-                self.texture =pygame.transform.rotate(self.baseTex,135)
-            if self.dir == "NorthWest":
-                self.texture =pygame.transform.rotate(self.baseTex,90)
-            if self.dir == "North":
-                self.texture =pygame.transform.rotate(self.baseTex,45)
-            if self.dir == "NorthEast":
-                self.texture =pygame.transform.rotate(self.baseTex,0)
+            if self._direction == "East":
+                self.texture = pygame.transform.rotate(self.baseTex,-45)
+            if self._direction == "SouthEast":
+                self.texture = pygame.transform.rotate(self.baseTex,-90)
+            if self._direction == "South":
+                self.texture = pygame.transform.rotate(self.baseTex,-135)
+            if self._direction == "SouthWest":
+                self.texture = pygame.transform.rotate(self.baseTex,-180)
+            if self._direction == "West":
+                self.texture = pygame.transform.rotate(self.baseTex,135)
+            if self._direction == "NorthWest":
+                self.texture = pygame.transform.rotate(self.baseTex,90)
+            if self._direction == "North":
+                self.texture = pygame.transform.rotate(self.baseTex,45)
+            if self._direction == "NorthEast":
+                self.texture = pygame.transform.rotate(self.baseTex,0)
 
-    def getDirection(self):
-        return self.dir
+    @property
+    def direction(self):
+        return self._direction
 
-    def setDirection(self, dir):
-        self.dir = dir
+    @direction.setter
+    def direction(self, newDir):
+        self._direction = newDir
         self._rotateTexture()
-
-
-    def isLocked(self):
-        return self.isLocked
 
     def lock(self):
         if self.team == "gold":
@@ -90,6 +88,3 @@ class Key:
 
     def select(self):
         self.isSelected = not self.isSelected
-
-    def getTexture(self):
-        return self.texture

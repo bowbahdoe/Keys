@@ -134,6 +134,9 @@ class Board:
 
 
     def getLockedPieceAtLocation(self, loc):
+        if type(loc) != str:
+            loc = makeLocAlphaNumeric(loc)
+
         if self.isLockedPieceAtLocation(loc):
             loc = self._findLocationIndexById(loc)
             return self.board[loc][2]
@@ -150,7 +153,7 @@ class Board:
         done = False
         returner = []
 
-        if key.getDirection() == "North":
+        if key.direction == "North":
             oneabove = (loc[0]-1,loc[1])
 
             while done == False:
@@ -175,7 +178,7 @@ class Board:
 
 
             #done
-        elif key.getDirection() == "NorthWest":
+        elif key.direction == "NorthWest":
             upleft = (loc[0]-1,loc[1]-1)
 
             while done==False:
@@ -189,7 +192,7 @@ class Board:
                     done = True
                 else:
                     done = True
-        elif key.getDirection() == "NorthEast":
+        elif key.direction == "NorthEast":
             upright = (loc[0]-1,loc[1]+1)
 
             while done==False:
@@ -203,7 +206,7 @@ class Board:
                     done = True
                 else:
                     done = True
-        elif key.getDirection() == "West":
+        elif key.direction == "West":
             oneleft = (loc[0] ,loc[1]-1)
             while done == False:
                 if oneleft[1] <1:
@@ -226,7 +229,7 @@ class Board:
             #break
             #if blank, add place
             #goto Top
-        elif key.getDirection() == "SouthWest":
+        elif key.direction == "SouthWest":
             downleft = (loc[0]+1,loc[1]-1)
 
             while done==False:
@@ -240,7 +243,7 @@ class Board:
                     done = True
                 else:
                     done = True
-        elif key.getDirection() == "South":
+        elif key.direction == "South":
             onebelow = (loc[0]+1,loc[1])
             while done == False:
                 if onebelow[0] >8:
@@ -255,7 +258,7 @@ class Board:
                 else:
 
                     done = True
-        elif key.getDirection() == "SouthEast":
+        elif key.direction == "SouthEast":
             downright = (loc[0]+1,loc[1]+1)
 
             while done==False:
@@ -269,7 +272,7 @@ class Board:
                     done = True
                 else:
                     done = True
-        elif key.getDirection() == "East":
+        elif key.direction == "East":
             oneright = (loc[0] ,loc[1] + 1)
             while done == False:
 
@@ -327,31 +330,31 @@ class Board:
         self.upright = (loc[0]-1,loc[1]+1)
         self.upleft = (loc[0]-1,loc[1]-1)
         self.oneabove = (loc[0]-1,loc[1])
-        if key.getDirection() != "North":
+        if key.direction != "North":
             returner.append(self.oneabove)
         else: self.oneabove = None
-        if key.getDirection() != "East":
+        if key.direction != "East":
             returner.append(self.oneright)
         else: self.oneright = None
-        if key.getDirection() != "SouthEast":
+        if key.direction != "SouthEast":
             returner.append(self.downright)
         else: self.downright = None
-        if key.getDirection() != "South":
+        if key.direction != "South":
             returner.append(self.onebelow)
         else: self.onebelow = None
-        if key.getDirection() != "SouthWest":
+        if key.direction != "SouthWest":
             returner.append(self.downleft)
         else:
             self.downleft = None
-        if key.getDirection() != "West":
+        if key.direction != "West":
             returner.append(self.oneleft)
         else:
             self.oneleft = None
-        if key.getDirection() != "NorthEast":
+        if key.direction != "NorthEast":
             returner.append(self.upright)
         else:
             self.upright = None
-        if key.getDirection() != "NorthWest":
+        if key.direction != "NorthWest":
             returner.append(self.upleft)
         else: self.upleft = None
         for loc in returner:
