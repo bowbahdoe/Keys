@@ -145,7 +145,7 @@ def handleKeyPress(event,turn,respawn):
         piece = BOARD.getPieceAtLocation(turn.pieceSelected)
 
         piece.setDirection(direc)
-        BOARD.addPieceToLocation(BOARD.getPieceAtLocation(turn.pieceSelected).getLocation(),
+        BOARD.addPieceToLocation(BOARD.getPieceAtLocation(turn.pieceSelected).location,
                                  piece)
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []

@@ -14,7 +14,7 @@ SILVER_LOCKED_TEXTURE = pygame.image.load("img/silver_lock.png")
 
 class Key:
     def __init__(self, location, direction, isLocked, team, selected=False):
-        self.loc = location
+        self.location = location
         self.dir = direction
         self.isLocked = isLocked
         self.team = team
@@ -68,12 +68,6 @@ class Key:
                 self.texture =pygame.transform.rotate(self.baseTex,45)
             if self.dir == "NorthEast":
                 self.texture =pygame.transform.rotate(self.baseTex,0)
-
-    def getLocation(self):
-        return self.loc
-
-    def setLocation(self, loc):
-        self.loc = loc
 
     def getDirection(self):
         return self.dir

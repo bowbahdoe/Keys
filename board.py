@@ -1,5 +1,6 @@
 from key import Key
 from location import makeLocCartesian, makeLocAlphaNumeric
+from port_utils import only_cartesian_locations
 
 class Board:
     '''Begin the ugliest attempt at making the logic for a chess board in
@@ -68,7 +69,7 @@ class Board:
 
 
     def movePieceToLocation(self,loc,piece):
-        lastLoc = piece.getLocation()
+        lastLoc = piece.location
         lastLocOnBoard = self._findLocationIndexById(lastLoc)
         if self.isLockedPieceAtLocation(loc):
             self.lockPieceAtLocation(loc)
@@ -76,28 +77,28 @@ class Board:
         newLocOnBoard = self._findLocationIndexById(loc)
 
         self.board[newLocOnBoard][1] = piece
-        piece.setLocation(loc)
+        piece.location = loc
 
 
-    def addPieceToLocation(self,loc,piece):
+    def addPieceToLocation(self, loc, piece):
         newLocOnBoard = self._findLocationIndexById(loc)
         self.board[newLocOnBoard][1] = piece
-        piece.setLocation(loc)
+        piece.location = loc
 
 
     def addLockedPieceToLocation(self, loc, piece):
         piece.lock()
         newLocOnBoard = self._findLocationIndexById(loc)
         self.board[newLocOnBoard][2] = piece
-        piece.setLocation(loc)
+        piece.location = loc
 
 
     def lockPieceAtLocation(self,loc):
-        Loc = self._findLocationIndexById(loc)
-        if self.board[Loc][1]!= None and self.board[2]==None:
-            self.board[Loc][2] = self.board[Loc][1]
-            self.board[Loc][1] = None
-            self.board[Loc][2].lock()
+        location_index = self._findLocationIndexById(loc)
+        if self.board[location_index][1] != None and self.board[2] == None:
+            self.board[location_index][2] = self.board[location_index][1]
+            self.board[location_index][1] = None
+            self.board[location_index][2].lock()
         else:
             pass
 
@@ -107,9 +108,7 @@ class Board:
         #just getting moved to the unlocked space
         Loc = self._findLocationIndexById(loc)
         if self.board[Loc][2]!= None:
-
             self.board[Loc][2] = None
-
         else:
             pass
 
@@ -123,12 +122,9 @@ class Board:
         loc = self._findLocationIndexById(loc)
         return self.board[loc][2] != None
 
-    def getPieceAtLocation(self,loc):
-
+    def getPieceAtLocation(self, loc):
         if type(loc) != str:
-
             loc = makeLocAlphaNumeric(loc)
-        Loc = self._findLocationIndexById(loc)
 
         if self.isPieceAtLocation(loc):
             loc = self._findLocationIndexById(loc)
@@ -137,7 +133,7 @@ class Board:
             return None
 
 
-    def getLockedPieceAtLocation(self,loc):
+    def getLockedPieceAtLocation(self, loc):
         if self.isLockedPieceAtLocation(loc):
             loc = self._findLocationIndexById(loc)
             return self.board[loc][2]
@@ -145,12 +141,12 @@ class Board:
             pass
 
 
+    @only_cartesian_locations
     def getValidMovesOfKeyAtLoc(self,loc):
         #This is the most complex and untested function
         #So yeah, use with caution
         key = self.getPieceAtLocation(loc)
-        if type(loc) == str:
-            loc = makeLocCartesian(loc)
+
         done = False
         returner = []
 
@@ -317,10 +313,9 @@ class Board:
             return None
 
 
+    @only_cartesian_locations
     def getRotatePointsofKeyAtLoc(self, loc):
         key = self.getPieceAtLocation(loc)
-        if type(loc) == str:
-            loc = makeLocCartesian(loc)
 
         done = False
         returner = []
