@@ -56,10 +56,9 @@ class Board:
         return gold == 0 or silver == 0
 
 
-    def _isLocOutOfBounds(self,loc):
-        '''loc is cartesian here'''
-        return loc[0] > 8 or loc[0] < 1 \
-            or loc[1] > 8 or loc[1] < 1
+    def _isLocOutOfBounds(self, cartesian_loc):
+        return cartesian_loc[0] > 8 or cartesian_loc[0] < 1 \
+            or cartesian_loc[1] > 8 or cartesian_loc[1] < 1
 
 
     def _findLocationIndexById(self,ID):
@@ -86,8 +85,8 @@ class Board:
         piece.setLocation(loc)
 
 
-    def addLockedPieceToLocation(self,loc,piece):
-        piece.setLocked(True)
+    def addLockedPieceToLocation(self, loc, piece):
+        piece.lock()
         newLocOnBoard = self._findLocationIndexById(loc)
         self.board[newLocOnBoard][2] = piece
         piece.setLocation(loc)
@@ -98,7 +97,7 @@ class Board:
         if self.board[Loc][1]!= None and self.board[2]==None:
             self.board[Loc][2] = self.board[Loc][1]
             self.board[Loc][1] = None
-            self.board[Loc][2].setLocked(True)
+            self.board[Loc][2].lock()
         else:
             pass
 
@@ -291,31 +290,34 @@ class Board:
 
         return returner
 
-    def getDirectionIndicatedByRotatePoint(self,loc):
+    def getDirectionIndicatedByRotatePoint(self, cartesian_loc):
         '''Seriosly, I need to do planning ahead before I
         do anything important. I always end up with about 20 stupid
         functions. Not-so-fun-ctions'''
 
+        loc = tuple(cartesian_loc)
 
-        if tuple(loc) == self.oneright:
+        if loc == self.oneright:
             return "East"
-        elif tuple(loc) == self.downright:
+        elif loc == self.downright:
             return "SouthEast"
-        elif tuple(loc) == self.onebelow:
+        elif loc == self.onebelow:
             return "South"
-        elif tuple(loc) == self.downleft:
+        elif loc == self.downleft:
             return "SouthWest"
-        elif tuple(loc) == self.oneleft:
+        elif loc == self.oneleft:
             return "West"
-        elif tuple(loc) == self.upright:
+        elif loc == self.upright:
             return "NorthEast"
-        elif tuple(loc) == self.upleft:
+        elif loc == self.upleft:
             return "NorthWest"
-        elif tuple(loc) == self.oneabove:
+        elif loc == self.oneabove:
             return "North"
+        else:
+            return None
 
 
-    def getRotatePointsofKeyAtLoc(self,loc):
+    def getRotatePointsofKeyAtLoc(self, loc):
         key = self.getPieceAtLocation(loc)
         if type(loc) == str:
             loc = makeLocCartesian(loc)

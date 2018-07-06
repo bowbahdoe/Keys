@@ -7,6 +7,11 @@ try:
 except(ImportError):
     import pyj2d as pygame
 
+GOLD_UNLOCKED_TEXTURE = pygame.image.load("img/yellow1.png")
+SILVER_UNLOCKED_TEXTURE = pygame.image.load("img/silver1.png")
+GOLD_LOCKED_TEXTURE = pygame.image.load("img/gold_lock.png")
+SILVER_LOCKED_TEXTURE = pygame.image.load("img/silver_lock.png")
+
 class Key:
     def __init__(self, location, direction, isLocked, team, selected=False):
         self.loc = location
@@ -16,11 +21,11 @@ class Key:
         self.isSelected = selected
 
         if self.team == "gold":
-            self.baseTex = pygame.image.load("img/yellow1.png")
-            self.texture = pygame.image.load("img/yellow1.png")
+            self.baseTex = GOLD_UNLOCKED_TEXTURE
+            self.texture = GOLD_UNLOCKED_TEXTURE
         else:
-            self.baseTex = pygame.image.load("img/silver1.png")
-            self.texture = pygame.image.load("img/silver1.png")
+            self.baseTex = SILVER_UNLOCKED_TEXTURE
+            self.texture = SILVER_UNLOCKED_TEXTURE
         self._rotateTexture()
 
         self.frame = 1
@@ -81,17 +86,13 @@ class Key:
     def isLocked(self):
         return self.isLocked
 
-    def setLocked(self, locked):
-        '''True or False'''
-        if self.team=="gold":
-            self.texture = pygame.image.load("img/gold_lock.png")
+    def lock(self):
+        if self.team == "gold":
+            self.texture = GOLD_LOCKED_TEXTURE
         else:
-            self.texture = pygame.image.load("img/silver_lock.png")
+            self.texture = SILVER_LOCKED_TEXTURE
 
-        if locked:
-            self.isLocked = True
-        else:
-            self.isLocked = False
+        self.isLocked = True
 
     def select(self):
         self.isSelected = not self.isSelected
