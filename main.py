@@ -67,9 +67,9 @@ def drawKeysOnBoard(display, board):
         key = board.getUnlocked(loc)
         drawKeyAtLoc(DISP, key, loc)
 
-def drawLockedKeysOnBoard(display, Board):
+def drawLockedKeysOnBoard(display, board):
     for loc in all_locations():
-        key = Board.getLocked(loc)
+        key = board.getLocked(loc)
         drawKeyAtLoc(display, key, loc)
 
 def all_locations():
