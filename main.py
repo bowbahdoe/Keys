@@ -37,8 +37,6 @@ class Respawn:
     def setRespawnOff(self):
         self.teamRespawning = None
         self.isRespawningNow = False
-    def getIfRespawningNow(self):
-        return self.isRespawningNow
     def getTeamRespawning(self):
         return self.teamRespawning
 
