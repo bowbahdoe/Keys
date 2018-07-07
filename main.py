@@ -158,7 +158,7 @@ def handleKeyPress(event,turn,respawn):
     elif not isRespawning:
         SQUARESTOHIGHLIGHT[:] = []
         ROTATEPOINTS[:] = []
-    if isRespawning:
+    if respawn.isRespawningNow:
         for i in BOARD.getFreeRespawnPointsForTeam(respawn.getTeamRespawning()):
             if i not in RESPAWNPOINTS:
                 RESPAWNPOINTS.append(makeLocCartesian(i))
