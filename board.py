@@ -1,8 +1,7 @@
 import collections
 
 from key import Key
-from location import makeLocCartesian, makeLocAlphaNumeric
-from port_utils import only_cartesian_locations
+from location import makeLocCartesian, makeLocAlphaNumeric, only_cartesian_locations
 
 class Board:
     '''Begin the ugliest attempt at making the logic for a chess board in

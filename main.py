@@ -7,10 +7,7 @@ import itertools
 from time import sleep
 from board import Board
 from key import Key
-from location import makeLocCartesian, makeLocAlphaNumeric
-from port_utils import only_cartesian_locations
-
-log = logging.getLogger(__name__)
+from location import makeLocCartesian, makeLocAlphaNumeric, only_cartesian_locations
 
 try:
     import pygame
@@ -198,6 +195,7 @@ def handleKeyPress(event,turn,respawn):
         turn.change()
 
 def getLocOfKeyPress(event):
+    log = logging.getLogger(__name__)
 
     pos = [event.pos[0],event.pos[1]]
     if JAVA:
