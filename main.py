@@ -79,23 +79,25 @@ def all_locations():
 
 def drawBoard(display, color1=(0,0,0), color2=(100,100,100)):
     display.fill(color1)
-    square_width = DISPLAYWIDTH // 8
-    square_height = DISPLAYHEIGHT // 8
-
     for row in range(8):
         for column in range(8):
             if column % 2 == row % 2:
                 pygame.draw.rect(
                     display,
                     color2,
-                    (column * square_height, row * square_width, square_height, square_width)
+                    (column * SHEIGHT, row * SWIDTH, SHEIGHT, SWIDTH)
                 )
 
 @only_cartesian_locations
 def highlightSquare(display, cartesian_loc, color):
     x = cartesian_loc[0]-1
     y = cartesian_loc[1]-1
-    pygame.draw.rect(display, color, ((x)*(SWIDTH),(SHEIGHT)*(y), SWIDTH, SHEIGHT),5)
+    pygame.draw.rect(
+        display,
+        color,
+        (x * SWIDTH, y * SHEIGHT, SWIDTH, SHEIGHT),
+        5
+    )
 
 def handleKeyPress(event, board, turn, respawn):
     isRespawning = respawn.isRespawningNow
@@ -108,7 +110,6 @@ def handleKeyPress(event, board, turn, respawn):
     unlockedPieceAtDest = board.getUnlocked(alphaNumLoc)
     if tuple(makeLocCartesian(alphaNumLoc)) in SQUARESTOHIGHLIGHT and not isRespawning:
         if unlockedPieceAtDest!= None:
-
             if unlockedPieceAtDest.team != board.getUnlocked(turn.pieceSelected).team:
                 board.addLockedPieceToLocation(alphaNumLoc,unlockedPieceAtDest)
         if lockedPieceAtDest != None:
