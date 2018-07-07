@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import sys
 import logging_setup
 import logging
@@ -31,12 +29,15 @@ class Respawn:
     def __init__(self):
         self.isRespawningNow = False
         self.teamRespawning = None
+
     def setRespawnOn(self,team):
         self.teamRespawning = team
         self.isRespawningNow = True
+
     def setRespawnOff(self):
         self.teamRespawning = None
         self.isRespawningNow = False
+
     def getTeamRespawning(self):
         return self.teamRespawning
 
@@ -44,13 +45,16 @@ class Turn:
     def __init__(self):
         self.turn = "gold"
         self.pieceSelected = None
+
     def getTurn(self):
         return self.turn
+
     def change(self):
         if self.turn == "gold":
             self.turn = "silver"
         else:
             self.turn ="gold"
+
     def setSelected(self,loc):
         self.pieceSelected = loc
 
@@ -175,7 +179,7 @@ def handleKeyPress(event,turn,respawn):
 def getLocOfKeyPress(event):
     log = logging.getLogger(__name__)
 
-    pos = [event.pos[0],event.pos[1]]
+    pos = [event.pos[0], event.pos[1]]
 
     returner = ""
     log.debug("User clicked at %s", pos)
