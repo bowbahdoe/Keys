@@ -93,8 +93,6 @@ def drawBoard(display, color1=(0,0,0), color2=(100,100,100)):
 
 @only_cartesian_locations
 def highlightSquare(display, cartesian_loc, color):
-    RectHeight = DISPLAYHEIGHT//16
-    RectWidth = DISPLAYHEIGHT//16
     x = cartesian_loc[0]-1
     y = cartesian_loc[1]-1
     pygame.draw.rect(display, color, ((x)*(SWIDTH),(SHEIGHT)*(y), SWIDTH, SHEIGHT),5)
@@ -221,12 +219,6 @@ def getLocOfKeyPress(event):
 
     return returner
 
-def resetGame():
-    print("resetting")
-    sleep(3)
-    BOARD.reset()
-    BOARD.isResetting= False
-
 def main():
     respawn = Respawn()
     turn = Turn()
@@ -241,9 +233,9 @@ def main():
 
     DISP.blit(background,(0,0))
     DISP.blit(keys,(0,0))
+
     while True:
         for event in pygame.event.get():
-
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
