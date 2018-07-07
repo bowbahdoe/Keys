@@ -155,7 +155,7 @@ def handleKeyPress(event,turn,respawn):
                 ROTATEPOINTS.remove(i)
             else:
                 ROTATEPOINTS.append(i)
-    elif not a:
+    elif not isRespawning:
         SQUARESTOHIGHLIGHT[:] = []
         ROTATEPOINTS[:] = []
     if isRespawning:
