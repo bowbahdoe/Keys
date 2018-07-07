@@ -121,7 +121,6 @@ def highlightSquare(display, cartesian_loc, color):
     pygame.draw.rect(display, color, ((x)*(SWIDTH),(SHEIGHT)*(y), SWIDTH, SHEIGHT),5)
 
 def handleKeyPress(event,turn,respawn):
-    shouldUpdate =1
     a = respawn.isRespawningNow
     z = getLocOfKeyPress(event)
 
@@ -258,7 +257,6 @@ def main():
     turn = Turn()
     background = pygame.Surface((DISPLAYHEIGHT,DISPLAYWIDTH))
     drawBoard(background)
-    shouldUpdate = 1
     pygame.init()
 
     pygame.display.set_caption("Keys")
@@ -286,32 +284,28 @@ def main():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-            shouldUpdate = 1
 
-        shouldUpdate = 1
+        DISP.blit(background,(0,0))
+        drawLockedKeysOnBoard(DISP,BOARD)
+        drawKeysOnBoard(DISP,BOARD)
+        for i in ROTATEPOINTS:
+            highlightSquare(DISP, (i[1],i[0]), (23,223,12))
+        for i in SQUARESTOHIGHLIGHT:
+            highlightSquare(DISP, (i[1],i[0]), (213,23,12))
 
-        if shouldUpdate:
-            DISP.blit(background,(0,0))
-            drawLockedKeysOnBoard(DISP,BOARD)
-            drawKeysOnBoard(DISP,BOARD)
-            for i in ROTATEPOINTS:
-                highlightSquare(DISP, (i[1],i[0]), (23,223,12))
-            for i in SQUARESTOHIGHLIGHT:
-                highlightSquare(DISP, (i[1],i[0]), (213,23,12))
+        for i in RESPAWNPOINTS:
+            highlightSquare(DISP, (i[1],i[0]), (233,34,223))
 
-            for i in RESPAWNPOINTS:
-                highlightSquare(DISP, (i[1],i[0]), (233,34,223))
+        if BOARD.isGameOver():
+            fpsclock.tick(1)
+            BOARD.reset()
 
-            if BOARD.isGameOver():
-                    fpsclock.tick(1)
-                    BOARD.reset()
-
-            pygame.display.update()
+        pygame.display.update()
         fpsclock.tick(FPS)
 
 BOARD = Board()
 BOARD.setup()
-shouldUpdate = 1
+
 
 
 if __name__ == "__main__":
