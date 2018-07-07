@@ -250,17 +250,6 @@ def resetGame():
     BOARD.reset()
     BOARD.isResetting= False
 
-def drawGameOverScreen(Display,background=(0,0,0),winner="none"):
-    Display.fill((0,0,0))
-    try:
-        myfont = pygame.font.SysFont("monospace", 40)
-        label = myfont.render(winner +" has lost", 3, (DISP,0,0))
-        Display.blit(label, (SWIDTH, SHEIGHT))
-    except:
-        pass
-    fpsclock.tick(1)
-    pygame.display.update()
-
 def main():
     if android:
         android.init()
