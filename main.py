@@ -84,12 +84,12 @@ def drawKeyAtLoc(DISP, key, loc):
 
 def drawKeysOnBoard(DISP,Board):
     for loc in all_locations():
-        key = Board.getPieceAtLocation(loc)
+        key = Board.getUnlocked(loc)
         drawKeyAtLoc(DISP, key, loc)
 
 def drawLockedKeysOnBoard(DISP,Board):
     for loc in all_locations():
-        key = Board.getLockedPieceAtLocation(loc)
+        key = Board.getLocked(loc)
         drawKeyAtLoc(DISP, key, loc)
 
 def all_locations():
@@ -127,33 +127,33 @@ def handleKeyPress(event,turn,respawn):
 
     tchange = False
 
-    lockedPieceAtDest = BOARD.getLockedPieceAtLocation(z)
-    unlockedPieceAtDest = BOARD.getPieceAtLocation(z)
+    lockedPieceAtDest = BOARD.getLocked(z)
+    unlockedPieceAtDest = BOARD.getUnlocked(z)
     if tuple(makeLocCartesian(z)) in SQUARESTOHIGHLIGHT and not a:
         if unlockedPieceAtDest!= None:
 
-            if unlockedPieceAtDest.team != BOARD.getPieceAtLocation(turn.pieceSelected).team:
+            if unlockedPieceAtDest.team != BOARD.getUnlocked(turn.pieceSelected).team:
                 BOARD.addLockedPieceToLocation(z,unlockedPieceAtDest)
         if lockedPieceAtDest != None:
-            if lockedPieceAtDest.team == BOARD.getPieceAtLocation(turn.pieceSelected).team:
+            if lockedPieceAtDest.team == BOARD.getUnlocked(turn.pieceSelected).team:
                 respawn.setRespawnOn(lockedPieceAtDest.team)
                 #BOARD.unlockPieceAtLocation(z)
-        BOARD.movePieceToLocation(z,BOARD.getPieceAtLocation(turn.pieceSelected))
+        BOARD.movePieceToLocation(z,BOARD.getUnlocked(turn.pieceSelected))
 
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         tchange = True
     elif tuple(makeLocCartesian(z)) in ROTATEPOINTS and not a:
         direc = BOARD.getDirectionIndicatedByRotatePoint(makeLocCartesian(z))
-        piece = BOARD.getPieceAtLocation(turn.pieceSelected)
+        piece = BOARD.getUnlocked(turn.pieceSelected)
 
         piece.direction = direc
-        BOARD.addPieceToLocation(BOARD.getPieceAtLocation(turn.pieceSelected).location,
+        BOARD.addPieceToLocation(BOARD.getUnlocked(turn.pieceSelected).location,
                                  piece)
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         tchange = True
-    elif BOARD.isPieceAtLocation(z) and BOARD.getPieceAtLocation(z).team == turn.getTurn() and not a:
+    elif BOARD.isPieceAtLocation(z) and BOARD.getUnlocked(z).team == turn.getTurn() and not a:
         turn.setSelected(z)
         y = BOARD.getValidMovesOfKeyAtLoc(z)
         y.sort()
