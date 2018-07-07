@@ -100,7 +100,7 @@ def highlightSquare(display, cartesian_loc, color):
     pygame.draw.rect(display, color, ((x)*(SWIDTH),(SHEIGHT)*(y), SWIDTH, SHEIGHT),5)
 
 def handleKeyPress(event,turn,respawn):
-    a = respawn.isRespawningNow
+    isRespawning = respawn.isRespawningNow
     z = getLocOfKeyPress(event)
 
 
@@ -108,7 +108,7 @@ def handleKeyPress(event,turn,respawn):
 
     lockedPieceAtDest = BOARD.getLocked(z)
     unlockedPieceAtDest = BOARD.getUnlocked(z)
-    if tuple(makeLocCartesian(z)) in SQUARESTOHIGHLIGHT and not a:
+    if tuple(makeLocCartesian(z)) in SQUARESTOHIGHLIGHT and not isRespawning:
         if unlockedPieceAtDest!= None:
 
             if unlockedPieceAtDest.team != BOARD.getUnlocked(turn.pieceSelected).team:
@@ -122,7 +122,7 @@ def handleKeyPress(event,turn,respawn):
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         tchange = True
-    elif tuple(makeLocCartesian(z)) in ROTATEPOINTS and not a:
+    elif tuple(makeLocCartesian(z)) in ROTATEPOINTS and not isRespawning:
         direc = BOARD.getDirectionIndicatedByRotatePoint(makeLocCartesian(z))
         piece = BOARD.getUnlocked(turn.pieceSelected)
 
@@ -132,7 +132,7 @@ def handleKeyPress(event,turn,respawn):
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         tchange = True
-    elif BOARD.isPieceAtLocation(z) and BOARD.getUnlocked(z).team == turn.getTurn() and not a:
+    elif BOARD.isPieceAtLocation(z) and BOARD.getUnlocked(z).team == turn.getTurn() and not isRespawning:
         turn.setSelected(z)
         y = BOARD.getValidMovesOfKeyAtLoc(z)
         y.sort()
@@ -158,7 +158,7 @@ def handleKeyPress(event,turn,respawn):
     elif not a:
         SQUARESTOHIGHLIGHT[:] = []
         ROTATEPOINTS[:] = []
-    if respawn.isRespawningNow:
+    if isRespawning:
         for i in BOARD.getFreeRespawnPointsForTeam(respawn.getTeamRespawning()):
             if i not in RESPAWNPOINTS:
                 RESPAWNPOINTS.append(makeLocCartesian(i))
@@ -267,7 +267,6 @@ def main():
             highlightSquare(DISP, (i[1],i[0]), (233,34,223))
 
         if BOARD.isGameOver():
-            fpsclock.tick(1)
             BOARD.reset()
 
         pygame.display.update()
