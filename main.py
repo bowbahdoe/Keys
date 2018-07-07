@@ -99,29 +99,29 @@ def highlightSquare(display, cartesian_loc, color):
 
 def handleKeyPress(event, board, turn, respawn):
     isRespawning = respawn.isRespawningNow
-    z = getLocOfKeyPress(event)
+    alphaNumLoc = getLocOfKeyPress(event)
 
 
     tchange = False
 
-    lockedPieceAtDest = board.getLocked(z)
-    unlockedPieceAtDest = board.getUnlocked(z)
-    if tuple(makeLocCartesian(z)) in SQUARESTOHIGHLIGHT and not isRespawning:
+    lockedPieceAtDest = board.getLocked(alphaNumLoc)
+    unlockedPieceAtDest = board.getUnlocked(alphaNumLoc)
+    if tuple(makeLocCartesian(alphaNumLoc)) in SQUARESTOHIGHLIGHT and not isRespawning:
         if unlockedPieceAtDest!= None:
 
             if unlockedPieceAtDest.team != board.getUnlocked(turn.pieceSelected).team:
-                board.addLockedPieceToLocation(z,unlockedPieceAtDest)
+                board.addLockedPieceToLocation(alphaNumLoc,unlockedPieceAtDest)
         if lockedPieceAtDest != None:
             if lockedPieceAtDest.team == board.getUnlocked(turn.pieceSelected).team:
                 respawn.setRespawnOn(lockedPieceAtDest.team)
-                #BOARD.unlockPieceAtLocation(z)
-        board.movePieceToLocation(z,board.getUnlocked(turn.pieceSelected))
+                #BOARD.unlockPieceAtLocation(alphaNumLoc)
+        board.movePieceToLocation(alphaNumLoc,board.getUnlocked(turn.pieceSelected))
 
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         tchange = True
-    elif tuple(makeLocCartesian(z)) in ROTATEPOINTS and not isRespawning:
-        direc = board.getDirectionIndicatedByRotatePoint(makeLocCartesian(z))
+    elif tuple(makeLocCartesian(alphaNumLoc)) in ROTATEPOINTS and not isRespawning:
+        direc = board.getDirectionIndicatedByRotatePoint(makeLocCartesian(alphaNumLoc))
         piece = board.getUnlocked(turn.pieceSelected)
 
         piece.direction = direc
@@ -130,12 +130,12 @@ def handleKeyPress(event, board, turn, respawn):
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         tchange = True
-    elif board.isPieceAtLocation(z) and board.getUnlocked(z).team == turn.getTurn() and not isRespawning:
-        turn.setSelected(z)
-        y = board.getValidMovesOfKeyAtLoc(z)
+    elif board.isPieceAtLocation(alphaNumLoc) and board.getUnlocked(alphaNumLoc).team == turn.getTurn() and not isRespawning:
+        turn.setSelected(alphaNumLoc)
+        y = board.getValidMovesOfKeyAtLoc(alphaNumLoc)
         y.sort()
         SQUARESTOHIGHLIGHT.sort()
-        rotatePrelim = board.getRotatePointsofKeyAtLoc(z)
+        rotatePrelim = board.getRotatePointsofKeyAtLoc(alphaNumLoc)
         if y != SQUARESTOHIGHLIGHT:
             SQUARESTOHIGHLIGHT[:] =[]
             ROTATEPOINTS[:] = []
@@ -160,13 +160,13 @@ def handleKeyPress(event, board, turn, respawn):
         for i in board.getFreeRespawnPointsForTeam(respawn.getTeamRespawning()):
             if i not in RESPAWNPOINTS:
                 RESPAWNPOINTS.append(makeLocCartesian(i))
-        if (makeLocCartesian(z)) in RESPAWNPOINTS:
+        if (makeLocCartesian(alphaNumLoc)) in RESPAWNPOINTS:
             if respawn.getTeamRespawning() == "gold":
-                key = Key(z,"South",False,"gold")
-                board.addPieceToLocation(z,key)
+                key = Key(alphaNumLoc,"South",False,"gold")
+                board.addPieceToLocation(alphaNumLoc,key)
             elif respawn.getTeamRespawning() == "silver":
-                key = Key(z,"North",False,"silver")
-                board.addPieceToLocation(z,key)
+                key = Key(alphaNumLoc,"North",False,"silver")
+                board.addPieceToLocation(alphaNumLoc,key)
             RESPAWNPOINTS[:] = []
             respawn.setRespawnOff()
             board.collapse_locked()
