@@ -9,14 +9,8 @@ from board import Board
 from key import Key
 from location import makeLocCartesian, makeLocAlphaNumeric, only_cartesian_locations
 
-try:
-    import pygame
-    from pygame.locals import *
-    JAVA = False
-except(ImportError):
-    import pyj2d as pygame
-    from pyj2d.locals import *
-    JAVA = True
+import pygame
+from pygame.locals import *
 
 try:
     import android
@@ -198,8 +192,6 @@ def getLocOfKeyPress(event):
     log = logging.getLogger(__name__)
 
     pos = [event.pos[0],event.pos[1]]
-    if JAVA:
-        pos = [event.pos[0]-3,event.pos[1]-25]
 
     returner = ""
     log.debug("User clicked at %s", pos)
