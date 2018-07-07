@@ -19,8 +19,6 @@ SHEIGHT = DISPLAYHEIGHT//8
 FPS = 30
 fpsclock = pygame.time.Clock()
 
-
-
 SQUARESTOHIGHLIGHT = []
 ROTATEPOINTS = []
 RESPAWNPOINTS = []
@@ -99,45 +97,45 @@ def highlightSquare(display, cartesian_loc, color):
     y = cartesian_loc[1]-1
     pygame.draw.rect(display, color, ((x)*(SWIDTH),(SHEIGHT)*(y), SWIDTH, SHEIGHT),5)
 
-def handleKeyPress(event,turn,respawn):
+def handleKeyPress(event, board, turn, respawn):
     isRespawning = respawn.isRespawningNow
     z = getLocOfKeyPress(event)
 
 
     tchange = False
 
-    lockedPieceAtDest = BOARD.getLocked(z)
-    unlockedPieceAtDest = BOARD.getUnlocked(z)
+    lockedPieceAtDest = board.getLocked(z)
+    unlockedPieceAtDest = board.getUnlocked(z)
     if tuple(makeLocCartesian(z)) in SQUARESTOHIGHLIGHT and not isRespawning:
         if unlockedPieceAtDest!= None:
 
-            if unlockedPieceAtDest.team != BOARD.getUnlocked(turn.pieceSelected).team:
-                BOARD.addLockedPieceToLocation(z,unlockedPieceAtDest)
+            if unlockedPieceAtDest.team != board.getUnlocked(turn.pieceSelected).team:
+                board.addLockedPieceToLocation(z,unlockedPieceAtDest)
         if lockedPieceAtDest != None:
-            if lockedPieceAtDest.team == BOARD.getUnlocked(turn.pieceSelected).team:
+            if lockedPieceAtDest.team == board.getUnlocked(turn.pieceSelected).team:
                 respawn.setRespawnOn(lockedPieceAtDest.team)
                 #BOARD.unlockPieceAtLocation(z)
-        BOARD.movePieceToLocation(z,BOARD.getUnlocked(turn.pieceSelected))
+        board.movePieceToLocation(z,board.getUnlocked(turn.pieceSelected))
 
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         tchange = True
     elif tuple(makeLocCartesian(z)) in ROTATEPOINTS and not isRespawning:
-        direc = BOARD.getDirectionIndicatedByRotatePoint(makeLocCartesian(z))
-        piece = BOARD.getUnlocked(turn.pieceSelected)
+        direc = board.getDirectionIndicatedByRotatePoint(makeLocCartesian(z))
+        piece = board.getUnlocked(turn.pieceSelected)
 
         piece.direction = direc
-        BOARD.addPieceToLocation(BOARD.getUnlocked(turn.pieceSelected).location,
+        board.addPieceToLocation(board.getUnlocked(turn.pieceSelected).location,
                                  piece)
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         tchange = True
-    elif BOARD.isPieceAtLocation(z) and BOARD.getUnlocked(z).team == turn.getTurn() and not isRespawning:
+    elif board.isPieceAtLocation(z) and board.getUnlocked(z).team == turn.getTurn() and not isRespawning:
         turn.setSelected(z)
-        y = BOARD.getValidMovesOfKeyAtLoc(z)
+        y = board.getValidMovesOfKeyAtLoc(z)
         y.sort()
         SQUARESTOHIGHLIGHT.sort()
-        rotatePrelim = BOARD.getRotatePointsofKeyAtLoc(z)
+        rotatePrelim = board.getRotatePointsofKeyAtLoc(z)
         if y != SQUARESTOHIGHLIGHT:
             SQUARESTOHIGHLIGHT[:] =[]
             ROTATEPOINTS[:] = []
@@ -159,19 +157,19 @@ def handleKeyPress(event,turn,respawn):
         SQUARESTOHIGHLIGHT[:] = []
         ROTATEPOINTS[:] = []
     if respawn.isRespawningNow:
-        for i in BOARD.getFreeRespawnPointsForTeam(respawn.getTeamRespawning()):
+        for i in board.getFreeRespawnPointsForTeam(respawn.getTeamRespawning()):
             if i not in RESPAWNPOINTS:
                 RESPAWNPOINTS.append(makeLocCartesian(i))
         if (makeLocCartesian(z)) in RESPAWNPOINTS:
             if respawn.getTeamRespawning() == "gold":
                 key = Key(z,"South",False,"gold")
-                BOARD.addPieceToLocation(z,key)
+                board.addPieceToLocation(z,key)
             elif respawn.getTeamRespawning() == "silver":
                 key = Key(z,"North",False,"silver")
-                BOARD.addPieceToLocation(z,key)
+                board.addPieceToLocation(z,key)
             RESPAWNPOINTS[:] = []
             respawn.setRespawnOff()
-            BOARD.collapse_locked()
+            board.collapse_locked()
 
     if tchange:
         turn.change()
@@ -243,7 +241,7 @@ def main():
                 sys.exit()
 
             if event.type == MOUSEBUTTONDOWN:
-                handleKeyPress(event,turn,respawn)
+                handleKeyPress(event, BOARD, turn,respawn)
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.quit()
