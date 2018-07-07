@@ -12,22 +12,10 @@ from location import makeLocCartesian, makeLocAlphaNumeric, only_cartesian_locat
 import pygame
 from pygame.locals import *
 
-try:
-    import android
-except(ImportError):
-    android = None
-
-if android:
-    #(0,0) makes the display the size of the physical screen
-    #On android, we want this (varying resolutions, etc)
-    DISP = pygame.display.set_mode((0,0))
-    DISPLAYHEIGHT = DISP.get_size()[0];
-    DISPLAYWIDTH = DISP.get_size()[1];
-else:
-    #These 2 need to be divisible by 8
-    DISPLAYHEIGHT = 600;
-    DISPLAYWIDTH = 600;
-    DISP = pygame.display.set_mode((DISPLAYHEIGHT,DISPLAYWIDTH))
+#These 2 need to be divisible by 8
+DISPLAYHEIGHT = 600;
+DISPLAYWIDTH = 600;
+DISP = pygame.display.set_mode((DISPLAYHEIGHT,DISPLAYWIDTH))
 SWIDTH = DISPLAYWIDTH//8
 SHEIGHT = DISPLAYHEIGHT//8
 FPS = 30
@@ -240,9 +228,6 @@ def resetGame():
     BOARD.isResetting= False
 
 def main():
-    if android:
-        android.init()
-        android.map_key(android.KEYCODE_BACK, pygame.K_ESCAPE)
     respawn = Respawn()
     turn = Turn()
     background = pygame.Surface((DISPLAYHEIGHT,DISPLAYWIDTH))
@@ -257,11 +242,6 @@ def main():
     DISP.blit(background,(0,0))
     DISP.blit(keys,(0,0))
     while True:
-
-        if android:
-            if android.check_pause():
-                android.wait_for_resume()
-
         for event in pygame.event.get():
 
             if event.type == QUIT:
