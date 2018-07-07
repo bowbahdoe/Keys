@@ -24,8 +24,6 @@ class Key:
             self.texture = SILVER_UNLOCKED_TEXTURE
         self._rotateTexture()
 
-        self.frame = 1
-
     def _rotateTexture(self):
         """Transforms the texture of this Key to match its team and rotation"""
         if self.team == "gold":
