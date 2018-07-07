@@ -1,11 +1,7 @@
 #Copyright 2014 Ethan McCue
 #All rights reserved to MacaulayCore
-#import Board
 
-try:
-    import pygame
-except(ImportError):
-    import pyj2d as pygame
+import pygame
 
 GOLD_UNLOCKED_TEXTURE = pygame.image.load("img/yellow1.png")
 SILVER_UNLOCKED_TEXTURE = pygame.image.load("img/silver1.png")
