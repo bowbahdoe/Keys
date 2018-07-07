@@ -8,6 +8,7 @@ from time import sleep
 from board import Board
 from key import Key
 from location import makeLocCartesian, makeLocAlphaNumeric
+from port_utils import only_cartesian_locations
 
 log = logging.getLogger(__name__)
 
@@ -76,29 +77,29 @@ class Turn:
     def setSelected(self,loc):
         self.pieceSelected = loc
 
-def drawKeyAtLoc(DISP, key, loc):
+def drawKeyAtLoc(display, key, loc):
     if key != None:
         texture = key.texture
         texture = pygame.transform.scale(texture, (SHEIGHT, SWIDTH))
-        DISP.blit(texture, (SWIDTH*(loc[1]-1), SHEIGHT*(loc[0]-1)))
+        display.blit(texture, (SWIDTH*(loc[1]-1), SHEIGHT*(loc[0]-1)))
 
-def drawKeysOnBoard(DISP,Board):
+def drawKeysOnBoard(display, board):
     for loc in all_locations():
-        key = Board.getUnlocked(loc)
+        key = board.getUnlocked(loc)
         drawKeyAtLoc(DISP, key, loc)
 
-def drawLockedKeysOnBoard(DISP,Board):
+def drawLockedKeysOnBoard(display, Board):
     for loc in all_locations():
         key = Board.getLocked(loc)
-        drawKeyAtLoc(DISP, key, loc)
+        drawKeyAtLoc(display, key, loc)
 
 def all_locations():
     """Returns an iterator over all the possible cartesian locations
     on an 8x8 board"""
     return itertools.product(range(1, 9), range(1, 9))
 
-def drawBoard(DisplayObj,color1=(0,0,0),color2=(100,100,100)):
-    DisplayObj.fill(color1)
+def drawBoard(display, color1=(0,0,0), color2=(100,100,100)):
+    display.fill(color1)
     square_width = DISPLAYWIDTH // 8
     square_height = DISPLAYHEIGHT // 8
 
@@ -106,18 +107,18 @@ def drawBoard(DisplayObj,color1=(0,0,0),color2=(100,100,100)):
         for column in range(8):
             if column % 2 == row % 2:
                 pygame.draw.rect(
-                    DisplayObj,
+                    display,
                     color2,
                     (column * square_height, row * square_width, square_height, square_width)
                 )
 
-def highlightSquare(loc,DisplayObj,color):
-    '''loc is a cartesian cordinate'''
+@only_cartesian_locations
+def highlightSquare(display, cartesian_loc, color):
     RectHeight = DISPLAYHEIGHT//16
     RectWidth = DISPLAYHEIGHT//16
-    x = loc[0]-1
-    y = loc[1]-1
-    pygame.draw.rect(DisplayObj,color,((x)*(SWIDTH),(SHEIGHT)*(y),SWIDTH,SHEIGHT),5)
+    x = cartesian_loc[0]-1
+    y = cartesian_loc[1]-1
+    pygame.draw.rect(display, color, ((x)*(SWIDTH),(SHEIGHT)*(y), SWIDTH, SHEIGHT),5)
 
 def handleKeyPress(event,turn,respawn):
     shouldUpdate =1
@@ -170,7 +171,7 @@ def handleKeyPress(event,turn,respawn):
             else:
                 SQUARESTOHIGHLIGHT.append(i)
 
-            highlightSquare((i[1],i[0]),DISP,(213,23,12))
+            highlightSquare(DISP, (i[1],i[0]), (213,23,12))
         for i in rotatePrelim:
             if i in ROTATEPOINTS:
                 ROTATEPOINTS.remove(i)
@@ -305,12 +306,12 @@ def main():
             drawLockedKeysOnBoard(DISP,BOARD)
             drawKeysOnBoard(DISP,BOARD)
             for i in ROTATEPOINTS:
-                highlightSquare((i[1],i[0]),DISP,(23,223,12))
+                highlightSquare(DISP, (i[1],i[0]), (23,223,12))
             for i in SQUARESTOHIGHLIGHT:
-                highlightSquare((i[1],i[0]),DISP,(213,23,12))
+                highlightSquare(DISP, (i[1],i[0]), (213,23,12))
 
             for i in RESPAWNPOINTS:
-                highlightSquare((i[1],i[0]),DISP,(233,34,223))
+                highlightSquare(DISP, (i[1],i[0]), (233,34,223))
 
             if BOARD.isGameOver():
                     fpsclock.tick(1)
