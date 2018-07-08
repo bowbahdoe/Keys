@@ -103,19 +103,17 @@ def handleKeyPress(event, board, turn, respawn):
     isRespawning = respawn.isRespawningNow
     alphaNumLoc = getLocOfKeyPress(event)
 
-
     tchange = False
-
+    
     lockedPieceAtDest = board.getLocked(alphaNumLoc)
     unlockedPieceAtDest = board.getUnlocked(alphaNumLoc)
     if tuple(makeLocCartesian(alphaNumLoc)) in SQUARESTOHIGHLIGHT and not isRespawning:
-        if unlockedPieceAtDest!= None:
+        if unlockedPieceAtDest != None:
             if unlockedPieceAtDest.team != board.getUnlocked(turn.pieceSelected).team:
                 board.addLockedPieceToLocation(alphaNumLoc,unlockedPieceAtDest)
         if lockedPieceAtDest != None:
             if lockedPieceAtDest.team == board.getUnlocked(turn.pieceSelected).team:
                 respawn.setRespawnOn(lockedPieceAtDest.team)
-                #BOARD.unlockPieceAtLocation(alphaNumLoc)
         board.movePieceToLocation(alphaNumLoc,board.getUnlocked(turn.pieceSelected))
 
         SQUARESTOHIGHLIGHT[:] =[]
@@ -131,32 +129,34 @@ def handleKeyPress(event, board, turn, respawn):
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         tchange = True
+
     elif board.isPieceAtLocation(alphaNumLoc) and board.getUnlocked(alphaNumLoc).team == turn.getTurn() and not isRespawning:
         turn.setSelected(alphaNumLoc)
-        y = board.getValidMovesOfKeyAtLoc(alphaNumLoc)
-        y.sort()
+        validMoves = board.getValidMovesOfKeyAtLoc(alphaNumLoc)
+        validMoves.sort()
         SQUARESTOHIGHLIGHT.sort()
         rotatePrelim = board.getRotatePointsofKeyAtLoc(alphaNumLoc)
-        if y != SQUARESTOHIGHLIGHT:
+        if validMoves != SQUARESTOHIGHLIGHT:
             SQUARESTOHIGHLIGHT[:] =[]
             ROTATEPOINTS[:] = []
-        for i in y:
-
+        for move in validMoves:
             remove = False
-            if i in SQUARESTOHIGHLIGHT:
-                SQUARESTOHIGHLIGHT.remove(i)
+            if move in SQUARESTOHIGHLIGHT:
+                SQUARESTOHIGHLIGHT.remove(move)
             else:
-                SQUARESTOHIGHLIGHT.append(i)
+                SQUARESTOHIGHLIGHT.append(move)
+            highlightSquare(DISP, (move[1], move[0]), (213,23,12))
 
-            highlightSquare(DISP, (i[1],i[0]), (213,23,12))
         for i in rotatePrelim:
             if i in ROTATEPOINTS:
                 ROTATEPOINTS.remove(i)
             else:
                 ROTATEPOINTS.append(i)
+
     elif not isRespawning:
         SQUARESTOHIGHLIGHT[:] = []
         ROTATEPOINTS[:] = []
+
     if respawn.isRespawningNow:
         for i in board.getFreeRespawnPointsForTeam(respawn.getTeamRespawning()):
             if i not in RESPAWNPOINTS:
