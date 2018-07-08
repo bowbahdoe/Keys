@@ -335,6 +335,10 @@ class Board:
     @only_cartesian_locations
     def getRotatePointsofKeyAtLoc(self, loc):
         key = self.getUnlocked(loc)
+
+        if key == None:
+            raise Exception("No key at the given location")
+
         x, y = loc
 
         done = False

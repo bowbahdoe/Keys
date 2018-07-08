@@ -14,7 +14,6 @@ from pygame.locals import *
 DISPLAYHEIGHT = 600
 DISPLAYWIDTH = 600
 RESOLUTION = (DISPLAYHEIGHT,DISPLAYWIDTH)
-DISP = pygame.display.set_mode(RESOLUTION)
 SWIDTH = DISPLAYWIDTH // 8
 SHEIGHT = DISPLAYHEIGHT // 8
 FPS = 30
@@ -66,7 +65,7 @@ def drawKeyAtLoc(display, key, loc):
 def drawKeysOnBoard(display, board):
     for loc in all_locations():
         key = board.getUnlocked(loc)
-        drawKeyAtLoc(DISP, key, loc)
+        drawKeyAtLoc(display, key, loc)
 
 def drawLockedKeysOnBoard(display, board):
     for loc in all_locations():
@@ -100,7 +99,7 @@ def highlightSquare(display, cartesian_loc, color):
         5
     )
 
-def handleKeyPress(event, board, turn, respawn):
+def handleKeyPress(event, display, board, turn, respawn):
     isRespawning = respawn.isRespawningNow
     alphaNumLoc = getLocOfKeyPress(event)
 
@@ -146,7 +145,7 @@ def handleKeyPress(event, board, turn, respawn):
                 SQUARESTOHIGHLIGHT.remove(move)
             else:
                 SQUARESTOHIGHLIGHT.append(move)
-            highlightSquare(DISP, (move[1], move[0]), (213,23,12))
+            highlightSquare(display, (move[1], move[0]), (213,23,12))
 
         for i in rotatePrelim:
             if i in ROTATEPOINTS:
@@ -195,8 +194,10 @@ def main():
     keys = pygame.Surface(RESOLUTION)
     drawKeysOnBoard(keys,BOARD)
 
-    DISP.blit(background,(0,0))
-    DISP.blit(keys,(0,0))
+    display = pygame.display.set_mode(RESOLUTION)
+
+    display.blit(background,(0,0))
+    display.blit(keys,(0,0))
 
     while True:
         for event in pygame.event.get():
@@ -205,22 +206,22 @@ def main():
                 sys.exit()
 
             if event.type == MOUSEBUTTONDOWN:
-                handleKeyPress(event, BOARD, turn,respawn)
+                handleKeyPress(event, display, BOARD, turn, respawn)
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
 
-        DISP.blit(background,(0,0))
-        drawLockedKeysOnBoard(DISP,BOARD)
-        drawKeysOnBoard(DISP,BOARD)
+        display.blit(background,(0,0))
+        drawLockedKeysOnBoard(display, BOARD)
+        drawKeysOnBoard(display, BOARD)
         for i in ROTATEPOINTS:
-            highlightSquare(DISP, (i[1],i[0]), (23,223,12))
+            highlightSquare(display, (i[1],i[0]), (23,223,12))
         for i in SQUARESTOHIGHLIGHT:
-            highlightSquare(DISP, (i[1],i[0]), (213,23,12))
+            highlightSquare(display, (i[1],i[0]), (213,23,12))
 
         for i in RESPAWNPOINTS:
-            highlightSquare(DISP, (i[1],i[0]), (233,34,223))
+            highlightSquare(display, (i[1],i[0]), (233,34,223))
 
         if BOARD.isGameOver():
             BOARD.reset()
