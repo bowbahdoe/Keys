@@ -180,55 +180,7 @@ def getLocOfKeyPress(event):
 
     log.debug("User clicked at %s", event.pos)
     clickX, clickY = event.pos
-
-    returner = ""
-    #Alpha part
-    if clickY in range(SHEIGHT):
-        returner += "A"
-    elif clickY in range(((SHEIGHT)),(SHEIGHT)*2):
-        returner += "B"
-    elif clickY in range(((SHEIGHT)*2),(SHEIGHT)*3):
-        returner += "C"
-    elif clickY in range(((SHEIGHT)*3),(SHEIGHT)*4):
-        returner += "D"
-    elif clickY in range(((SHEIGHT)*4),(SHEIGHT)*5):
-        returner += "E"
-    elif clickY in range(((SHEIGHT)*5),(SHEIGHT)*6):
-        returner += "F"
-    elif clickY in range(((SHEIGHT)*6),(SHEIGHT)*7):
-        returner += "G"
-    elif clickY in range(((SHEIGHT)*7),(SHEIGHT)*8):
-        returner += "H"
-    else:
-        raise AssertionError(
-            "The Y-Coordinate of the user's click was out of bounds.",
-            event.pos
-        )
-
-    #numeric Part
-    if clickX in range(SWIDTH):
-        returner += "1"
-    elif clickX in range(((SWIDTH)),(SWIDTH)*2):
-        returner += "2"
-    elif clickX in range(((SWIDTH)*2),(SWIDTH)*3):
-        returner += "3"
-    elif clickX in range(((SWIDTH)*3),(SWIDTH)*4):
-        returner += "4"
-    elif clickX in range(((SWIDTH)*4),(SWIDTH)*5):
-        returner += "5"
-    elif clickX in range(((SWIDTH)*5),(SWIDTH)*6):
-        returner += "6"
-    elif clickX in range(((SWIDTH)*6),(SWIDTH)*7):
-        returner += "7"
-    elif clickX in range(((SWIDTH)*7),(SWIDTH)*8):
-        returner += "8"
-    else:
-        raise AssertionError(
-            "The X-Coordinate of the user's click was out of bounds.",
-            event.pos
-        )
-
-    return returner
+    return makeLocAlphaNumeric((clickY // SHEIGHT + 1, clickX // SWIDTH + 1))
 
 def main():
     respawn = Respawn()
