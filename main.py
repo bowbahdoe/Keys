@@ -185,19 +185,23 @@ def getLocOfKeyPress(event):
 def main():
     respawn = Respawn()
     turn = Turn()
-    background = pygame.Surface(RESOLUTION)
-    drawBoard(background)
+    board = Board()
+    board.setup()
+
     pygame.init()
 
     pygame.display.set_caption("Keys")
 
-    keys = pygame.Surface(RESOLUTION)
-    drawKeysOnBoard(keys,BOARD)
-
     display = pygame.display.set_mode(RESOLUTION)
 
-    display.blit(background,(0,0))
-    display.blit(keys,(0,0))
+    background = pygame.Surface(RESOLUTION)
+    drawBoard(background)
+    display.blit(background, (0,0))
+
+
+    keys = pygame.Surface(RESOLUTION)
+    drawKeysOnBoard(keys, board)
+    display.blit(keys, (0,0))
 
     while True:
         for event in pygame.event.get():
@@ -206,15 +210,15 @@ def main():
                 sys.exit()
 
             if event.type == MOUSEBUTTONDOWN:
-                handleKeyPress(event, display, BOARD, turn, respawn)
+                handleKeyPress(event, display, board, turn, respawn)
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
 
         display.blit(background,(0,0))
-        drawLockedKeysOnBoard(display, BOARD)
-        drawKeysOnBoard(display, BOARD)
+        drawLockedKeysOnBoard(display, board)
+        drawKeysOnBoard(display, board)
         for i in ROTATEPOINTS:
             highlightSquare(display, (i[1],i[0]), (23,223,12))
         for i in SQUARESTOHIGHLIGHT:
@@ -223,15 +227,11 @@ def main():
         for i in RESPAWNPOINTS:
             highlightSquare(display, (i[1],i[0]), (233,34,223))
 
-        if BOARD.isGameOver():
-            BOARD.reset()
+        if board.isGameOver():
+            board.reset()
 
         pygame.display.update()
         fpsclock.tick(FPS)
-
-BOARD = Board()
-BOARD.setup()
-
 
 
 if __name__ == "__main__":
