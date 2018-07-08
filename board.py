@@ -335,17 +335,18 @@ class Board:
     @only_cartesian_locations
     def getRotatePointsofKeyAtLoc(self, loc):
         key = self.getUnlocked(loc)
+        x, y = loc
 
         done = False
         returner = []
-        self.oneright = (loc[0] ,loc[1] + 1)
-        self.downright = (loc[0]+1,loc[1]+1)
-        self.onebelow = (loc[0]+1,loc[1])
-        self.downleft = (loc[0]+1,loc[1]-1)
-        self.oneleft = (loc[0] ,loc[1]-1)
-        self.upright = (loc[0]-1,loc[1]+1)
-        self.upleft = (loc[0]-1,loc[1]-1)
-        self.oneabove = (loc[0]-1,loc[1])
+        self.oneright =   (x    , y + 1)
+        self.downright =  (x + 1, y + 1)
+        self.onebelow =   (x + 1, y    )
+        self.downleft =   (x + 1, y - 1)
+        self.oneleft =    (x    , y - 1)
+        self.upright =    (x - 1, y + 1)
+        self.upleft =     (x - 1, y - 1)
+        self.oneabove =   (x - 1, y    )
         if key.direction != "North":
             returner.append(self.oneabove)
         else: self.oneabove = None
@@ -373,6 +374,7 @@ class Board:
         if key.direction != "NorthWest":
             returner.append(self.upleft)
         else: self.upleft = None
+
         for loc in returner:
             if self._isLocOutOfBounds(loc):
                 returner.remove(loc)
