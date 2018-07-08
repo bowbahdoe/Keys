@@ -99,7 +99,7 @@ def highlightSquare(display, cartesian_loc, color):
         5
     )
 
-def handleKeyPress(event, display, board, turn, respawn):
+def handleKeyPress(event, *, display, board, turn, respawn):
     isRespawning = respawn.isRespawningNow
     alphaNumLoc = getLocOfKeyPress(event)
 
@@ -210,7 +210,13 @@ def main():
                 sys.exit()
 
             if event.type == MOUSEBUTTONDOWN:
-                handleKeyPress(event, display, board, turn, respawn)
+                handleKeyPress(**{
+                    'event': event,
+                    'display': display,
+                    'board': board,
+                    'turn': turn,
+                    'respawn': respawn
+                })
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.quit()
