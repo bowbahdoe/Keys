@@ -11,11 +11,12 @@ import pygame
 from pygame.locals import *
 
 #These 2 need to be divisible by 8
-DISPLAYHEIGHT = 600;
-DISPLAYWIDTH = 600;
-DISP = pygame.display.set_mode((DISPLAYHEIGHT,DISPLAYWIDTH))
-SWIDTH = DISPLAYWIDTH//8
-SHEIGHT = DISPLAYHEIGHT//8
+DISPLAYHEIGHT = 600
+DISPLAYWIDTH = 600
+RESOLUTION = (DISPLAYHEIGHT,DISPLAYWIDTH)
+DISP = pygame.display.set_mode(RESOLUTION)
+SWIDTH = DISPLAYWIDTH // 8
+SHEIGHT = DISPLAYHEIGHT // 8
 FPS = 30
 fpsclock = pygame.time.Clock()
 
@@ -104,7 +105,7 @@ def handleKeyPress(event, board, turn, respawn):
     alphaNumLoc = getLocOfKeyPress(event)
 
     tchange = False
-    
+
     lockedPieceAtDest = board.getLocked(alphaNumLoc)
     unlockedPieceAtDest = board.getUnlocked(alphaNumLoc)
     if tuple(makeLocCartesian(alphaNumLoc)) in SQUARESTOHIGHLIGHT and not isRespawning:
@@ -185,13 +186,13 @@ def getLocOfKeyPress(event):
 def main():
     respawn = Respawn()
     turn = Turn()
-    background = pygame.Surface((DISPLAYHEIGHT,DISPLAYWIDTH))
+    background = pygame.Surface(RESOLUTION)
     drawBoard(background)
     pygame.init()
 
     pygame.display.set_caption("Keys")
 
-    keys = pygame.Surface((DISPLAYHEIGHT,DISPLAYWIDTH))
+    keys = pygame.Surface(RESOLUTION)
     drawKeysOnBoard(keys,BOARD)
 
     DISP.blit(background,(0,0))
