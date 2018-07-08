@@ -219,12 +219,11 @@ def main():
         display.blit(background,(0,0))
         drawLockedKeysOnBoard(display, board)
         drawKeysOnBoard(display, board)
-
         for location in ROTATEPOINTS:
             highlightSquare(display, (location[1], location[0]), (23,223,12))
-        for i in SQUARESTOHIGHLIGHT:
+        for location in SQUARESTOHIGHLIGHT:
             highlightSquare(display, (location[1], location[0]), (213,23,12))
-        for i in RESPAWNPOINTS:
+        for location in RESPAWNPOINTS:
             highlightSquare(display, (location[1], location[0]), (233,34,223))
 
         if board.isGameOver():
