@@ -1,7 +1,8 @@
 import collections
 
 from key import Key
-from location import makeLocCartesian, makeLocAlphaNumeric, only_cartesian_locations
+from location import makeLocCartesian, makeLocAlphaNumeric, only_cartesian_locations, \
+    isLocOutOfBounds
 
 class Board:
     '''Begin the ugliest attempt at making the logic for a chess board in
@@ -36,7 +37,6 @@ class Board:
         #
         #The third item is for storing any locked keys
         #otherwise it will be None
-        self._board = collections.defaultdict(lambda: {'unlocked': None, 'locked': None})
 
     def reset(self):
         for location in self.board:
@@ -57,30 +57,14 @@ class Board:
                 else:
                     silver += 1
 
-        # Calculate based on new board
-        for location in self._board.values():
-            unlocked_piece = location['unlocked']
-            if unlockedPiece != None:
-                if unlockedPiece.team == "gold":
-                    gold += 1
-                else:
-                    silver += 1
-
         return gold == 0 or silver == 0
-
-
-    def _isLocOutOfBounds(self, cartesian_loc):
-        return cartesian_loc[0] > 8 or cartesian_loc[0] < 1 \
-            or cartesian_loc[1] > 8 or cartesian_loc[1] < 1
-
 
     def _findLocationIndexById(self,ID):
         for square in self.board:
             if square[0] == ID:
                 return self.board.index(square)
 
-
-    def movePieceToLocation(self,loc,piece):
+    def movePieceToLocation(self, loc, piece):
         lastLoc = piece.location
         lastLocOnBoard = self._findLocationIndexById(lastLoc)
         if self.isLockedPieceAtLocation(loc):
@@ -171,27 +155,20 @@ class Board:
 
         if key.direction == "North":
             oneabove = (loc[0]-1,loc[1])
-
             while done == False:
-
                 if oneabove[0] <1:
-
                     done = True
 
                 elif self.getUnlocked(oneabove) == None:
-
                     returner.append(oneabove)
                     oneabove = (oneabove[0]-1,oneabove[1])
 
                 elif self.getUnlocked(oneabove).team != key.team:
                     returner.append(oneabove)
-
                     done = True
 
                 else:
-
                     done = True
-
 
             #done
         elif key.direction == "NorthWest":
@@ -212,7 +189,7 @@ class Board:
             upright = (loc[0]-1,loc[1]+1)
 
             while done==False:
-                if upright[1]>8 or upright[0]<1:
+                if upright[1]> 8 or upright[0]<1:
                     done = True
                 elif self.getUnlocked(upright) == None:
                     returner.append(upright)
@@ -249,7 +226,7 @@ class Board:
             downleft = (loc[0]+1,loc[1]-1)
 
             while done==False:
-                if downleft[1]<1 or downleft[0]>8:
+                if downleft[1]<1 or downleft[0]> 8:
                     done = True
                 elif self.getUnlocked(downleft) == None:
                     returner.append(downleft)
@@ -262,7 +239,7 @@ class Board:
         elif key.direction == "South":
             onebelow = (loc[0]+1,loc[1])
             while done == False:
-                if onebelow[0] >8:
+                if onebelow[0] > 8:
 
                     done = True
                 elif self.getUnlocked(onebelow) == None:
@@ -278,7 +255,7 @@ class Board:
             downright = (loc[0]+1,loc[1]+1)
 
             while done==False:
-                if downright[1]>8 or downright[0]>8:
+                if downright[1]> 8 or downright[0]> 8:
                     done = True
                 elif self.getUnlocked(downright) == None:
                     returner.append(downright)
@@ -292,7 +269,7 @@ class Board:
             oneright = (loc[0] ,loc[1] + 1)
             while done == False:
 
-                if oneright[1] >8:
+                if oneright[1] > 8:
                     done = True
                 elif self.getUnlocked(oneright) == None:
                     returner.append(oneright)
@@ -380,7 +357,7 @@ class Board:
         else: self.upleft = None
 
         for loc in returner:
-            if self._isLocOutOfBounds(loc):
+            if isLocOutOfBounds(loc):
                 returner.remove(loc)
 
         return returner

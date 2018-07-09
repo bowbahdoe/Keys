@@ -46,3 +46,7 @@ def only_cartesian_locations(method):
         return method(self, loc, *args, **kwargs)
 
     return wrapped
+
+def isLocOutOfBounds(cartesian_loc):
+    return cartesian_loc[0] > 8 or cartesian_loc[0] < 1 \
+        or cartesian_loc[1] > 8 or cartesian_loc[1] < 1
