@@ -90,8 +90,8 @@ def drawBoard(display, color1=(0,0,0), color2=(100,100,100)):
 
 @only_cartesian_locations
 def highlightSquare(display, cartesian_loc, color):
-    x = cartesian_loc[0]-1
-    y = cartesian_loc[1]-1
+    x = cartesian_loc[0] - 1
+    y = cartesian_loc[1] - 1
     pygame.draw.rect(
         display,
         color,
@@ -102,8 +102,6 @@ def highlightSquare(display, cartesian_loc, color):
 def handleKeyPress(event, *, display, board, turn, respawn):
     isRespawning = respawn.isRespawningNow
     alphaNumLoc = getLocOfKeyPress(event)
-
-    tchange = False
 
     lockedPieceAtDest = board.getLocked(alphaNumLoc)
     unlockedPieceAtDest = board.getUnlocked(alphaNumLoc)
@@ -118,7 +116,7 @@ def handleKeyPress(event, *, display, board, turn, respawn):
 
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
-        tchange = True
+        turn.change()
     elif makeLocCartesian(alphaNumLoc) in ROTATEPOINTS and not isRespawning:
         direc = board.getDirectionIndicatedByRotatePoint(makeLocCartesian(alphaNumLoc))
         piece = board.getUnlocked(turn.pieceSelected)
@@ -128,7 +126,7 @@ def handleKeyPress(event, *, display, board, turn, respawn):
                                  piece)
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
-        tchange = True
+        turn.change()
 
     elif board.isPieceAtLocation(alphaNumLoc) \
         and board.getUnlocked(alphaNumLoc).team == turn.getTurn() \
@@ -174,12 +172,8 @@ def handleKeyPress(event, *, display, board, turn, respawn):
             respawn.setRespawnOff()
             board.collapse_locked()
 
-    if tchange:
-        turn.change()
-
 def getLocOfKeyPress(event):
     log = logging.getLogger(__name__)
-
     log.debug("User clicked at %s", event.pos)
     clickX, clickY = event.pos
     return makeLocAlphaNumeric((clickY // SHEIGHT + 1, clickX // SWIDTH + 1))
