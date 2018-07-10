@@ -272,12 +272,10 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        screen.update()
-
         if board.isGameOver:
             board.reset()
 
-        pygame.display.update()
+        screen.update()
         fpsclock.tick(FPS)
 
 
