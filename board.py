@@ -45,6 +45,7 @@ class Board:
         self.setup()
 
 
+    @property
     def isGameOver(self):
         silver = 0
         gold = 0

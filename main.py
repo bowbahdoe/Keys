@@ -234,7 +234,7 @@ def main():
         for location in RESPAWNPOINTS:
             highlightSquare(display, (location[1], location[0]), (233,34,223))
 
-        if board.isGameOver():
+        if board.isGameOver:
             board.reset()
 
         pygame.display.update()
