@@ -13,7 +13,7 @@ def makeLocCartesian(loc):
                "G": 7,
                "H": 8 }
 
-    return [locDic[loc[0]], int(loc[1])]
+    return (locDic[loc[0]], int(loc[1]))
 
 def makeLocAlphaNumeric(loc):
     locDic = { 1: 'A',
