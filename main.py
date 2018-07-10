@@ -184,6 +184,61 @@ def getLocOfKeyPress(event):
     clickX, clickY = event.pos
     return makeLocAlphaNumeric((clickY // SHEIGHT + 1, clickX // SWIDTH + 1))
 
+class Screen:
+    def __init__(self, *, board, resolution):
+        self.board = board
+        self.resolution = resolution
+
+    def init(self):
+        self._display = pygame.display.set_mode(self.resolution)
+
+    @property
+    def _background(self):
+        background = self._transparent_surface()
+        drawBoard(background)
+        return background
+
+    @property
+    def _unlocked_keys(self):
+        unlocked_keys = self._transparent_surface()
+        drawKeysOnBoard(unlocked_keys, self.board)
+        return unlocked_keys
+
+    @property
+    def _locked_keys(self):
+        locked_keys = self._transparent_surface()
+        drawLockedKeysOnBoard(locked_keys, self.board)
+        return locked_keys
+
+    @property
+    def display(self):
+        if self._display == None:
+            raise Exception("The display has not been created yet")
+        else:
+            return self._display
+
+    def _transparent_surface(self):
+        surface = pygame.Surface(self.resolution, pygame.SRCALPHA, 32)
+        surface.convert_alpha()
+        return surface
+
+    def update(self):
+        def draw(surface):
+            self.display.blit(surface, (0, 0))
+
+        draw(self._background)
+        draw(self._locked_keys)
+        draw(self._unlocked_keys)
+
+        for location in ROTATEPOINTS:
+            highlightSquare(self.display, (location[1], location[0]), (23,223,12))
+        for location in SQUARESTOHIGHLIGHT:
+            highlightSquare(self.display, (location[1], location[0]), (213,23,12))
+        for location in RESPAWNPOINTS:
+            highlightSquare(self.display, (location[1], location[0]), (233,34,223))
+
+        pygame.display.update()
+
 def main():
     respawn = Respawn()
     turn = Turn()
@@ -194,16 +249,9 @@ def main():
 
     pygame.display.set_caption("Keys")
 
-    display = pygame.display.set_mode(RESOLUTION)
-
-    background = pygame.Surface(RESOLUTION)
-    drawBoard(background)
-    display.blit(background, (0,0))
-
-
-    keys = pygame.Surface(RESOLUTION)
-    drawKeysOnBoard(keys, board)
-    display.blit(keys, (0,0))
+    screen = Screen(resolution=RESOLUTION, board=board)
+    screen.init()
+    screen.update()
 
     while True:
         for event in pygame.event.get():
@@ -214,7 +262,7 @@ def main():
             if event.type == MOUSEBUTTONDOWN:
                 handleKeyPress(
                     event=event,
-                    display=display,
+                    display=screen.display,
                     board=board,
                     turn=turn,
                     respawn=respawn
@@ -224,15 +272,7 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        display.blit(background,(0,0))
-        drawLockedKeysOnBoard(display, board)
-        drawKeysOnBoard(display, board)
-        for location in ROTATEPOINTS:
-            highlightSquare(display, (location[1], location[0]), (23,223,12))
-        for location in SQUARESTOHIGHLIGHT:
-            highlightSquare(display, (location[1], location[0]), (213,23,12))
-        for location in RESPAWNPOINTS:
-            highlightSquare(display, (location[1], location[0]), (233,34,223))
+        screen.update()
 
         if board.isGameOver:
             board.reset()
