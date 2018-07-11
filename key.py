@@ -11,74 +11,50 @@ SILVER_LOCKED_TEXTURE = pygame.image.load("img/silver_lock.png")
 class Key:
     def __init__(self, location, direction, isLocked, team, selected=False):
         self.location = location
-        self._direction = direction
+        self.direction = direction
         self.isLocked = isLocked
         self.team = team
         self.isSelected = selected
 
-        if self.team == "gold":
-            self.baseTex = GOLD_UNLOCKED_TEXTURE
-            self.texture = GOLD_UNLOCKED_TEXTURE
-        else:
-            self.baseTex = SILVER_UNLOCKED_TEXTURE
-            self.texture = SILVER_UNLOCKED_TEXTURE
-        self._rotateTexture()
-
-    def _rotateTexture(self):
-        """Transforms the texture of this Key to match its team and rotation"""
-        if self.team == "gold":
-            if self._direction == "East":
-                self.texture = pygame.transform.rotate(self.baseTex,45)
-            if self._direction == "SouthEast":
-                self.texture = pygame.transform.rotate(self.baseTex,360)
-            if self._direction == "South":
-                self.texture = pygame.transform.rotate(self.baseTex,-40)
-            if self._direction == "SouthWest":
-                self.texture = pygame.transform.rotate(self.baseTex,-90)
-            if self._direction == "West":
-                self.texture = pygame.transform.rotate(self.baseTex,-135)
-            if self._direction == "NorthWest":
-                self.texture = pygame.transform.rotate(self.baseTex,-180)
-            if self._direction == "North":
-                self.texture = pygame.transform.rotate(self.baseTex,135)
-            if self._direction == "NorthEast":
-                self.texture = pygame.transform.rotate(self.baseTex,90)
-
-
-        else:
-            if self._direction == "East":
-                self.texture = pygame.transform.rotate(self.baseTex,-45)
-            if self._direction == "SouthEast":
-                self.texture = pygame.transform.rotate(self.baseTex,-90)
-            if self._direction == "South":
-                self.texture = pygame.transform.rotate(self.baseTex,-135)
-            if self._direction == "SouthWest":
-                self.texture = pygame.transform.rotate(self.baseTex,-180)
-            if self._direction == "West":
-                self.texture = pygame.transform.rotate(self.baseTex,135)
-            if self._direction == "NorthWest":
-                self.texture = pygame.transform.rotate(self.baseTex,90)
-            if self._direction == "North":
-                self.texture = pygame.transform.rotate(self.baseTex,45)
-            if self._direction == "NorthEast":
-                self.texture = pygame.transform.rotate(self.baseTex,0)
-
     @property
-    def direction(self):
-        return self._direction
-
-    @direction.setter
-    def direction(self, newDir):
-        self._direction = newDir
-        self._rotateTexture()
+    def texture(self):
+        return key_texture(self)
 
     def lock(self):
-        if self.team == "gold":
-            self.texture = GOLD_LOCKED_TEXTURE
-        else:
-            self.texture = SILVER_LOCKED_TEXTURE
-
         self.isLocked = True
 
     def select(self):
         self.isSelected = not self.isSelected
+
+def key_texture(key):
+    def base_texture(key):
+        if key.team == "gold":
+            if key.isLocked:
+                return GOLD_LOCKED_TEXTURE
+            else:
+                return GOLD_UNLOCKED_TEXTURE
+        else:
+            if key.isLocked:
+                return SILVER_LOCKED_TEXTURE
+            else:
+                return SILVER_UNLOCKED_TEXTURE
+
+    def texture_rotation(key):
+        rotation_map = {
+            "East":         { "gold":   45, "silver":  -45 },
+            "SouthEast":    { "gold":  360, "silver":  -90 },
+            "South":        { "gold":  -45, "silver": -135 },
+            "SouthWest":    { "gold":  -90, "silver": -180 },
+            "West":         { "gold": -135, "silver":  135 },
+            "NorthWest":    { "gold": -180, "silver":   90 },
+            "North":        { "gold":  135, "silver":   45 },
+            "NorthEast":    { "gold":   90, "silver":    0 }
+        }
+
+        if key.isLocked:
+            return 0
+        else:
+            return rotation_map[key.direction][key.team]
+
+    texture = base_texture(key)
+    return pygame.transform.rotate(texture, texture_rotation(key))
