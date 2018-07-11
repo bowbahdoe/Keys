@@ -25,19 +25,17 @@ RESPAWNPOINTS = []
 
 class Respawn:
     def __init__(self):
-        self.isRespawningNow = False
         self.teamRespawning = None
 
     def setRespawnOn(self,team):
         self.teamRespawning = team
-        self.isRespawningNow = True
 
     def setRespawnOff(self):
         self.teamRespawning = None
-        self.isRespawningNow = False
 
-    def getTeamRespawning(self):
-        return self.teamRespawning
+    @property
+    def isRespawningNow(self):
+        return self.teamRespawning != None
 
 class Turn:
     def __init__(self):
@@ -158,14 +156,14 @@ def handleKeyPress(event, *, display, board, turn, respawn):
         ROTATEPOINTS[:] = []
 
     if respawn.isRespawningNow:
-        for i in board.getFreeRespawnPointsForTeam(respawn.getTeamRespawning()):
+        for i in board.getFreeRespawnPointsForTeam(respawn.teamRespawning):
             if i not in RESPAWNPOINTS:
                 RESPAWNPOINTS.append(makeLocCartesian(i))
-        if (makeLocCartesian(alphaNumLoc)) in RESPAWNPOINTS:
-            if respawn.getTeamRespawning() == "gold":
+        if makeLocCartesian(alphaNumLoc) in RESPAWNPOINTS:
+            if respawn.teamRespawning == "gold":
                 key = Key(alphaNumLoc,"South",False,"gold")
                 board.addPieceToLocation(alphaNumLoc,key)
-            elif respawn.getTeamRespawning() == "silver":
+            elif respawn.teamRespawning == "silver":
                 key = Key(alphaNumLoc,"North",False,"silver")
                 board.addPieceToLocation(alphaNumLoc,key)
             RESPAWNPOINTS[:] = []
@@ -236,8 +234,7 @@ class Screen:
 def main():
     respawn = Respawn()
     turn = Turn()
-    board = Board()
-    board.setup()
+    board = Board.default()
 
     pygame.init()
 

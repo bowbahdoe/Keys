@@ -42,7 +42,7 @@ class Board:
         for location in self.board:
             location[2] = None
             location[1] = None
-        self.setup()
+        self._setup()
 
 
     @property
@@ -169,22 +169,21 @@ class Board:
             log.warn("No key at the given location")
             return []
 
-        evolver_fn = movers.get(key.direction)
+        move_fn = movers.get(key.direction)
 
-        if evolver_fn == None:
+        if move_fn == None:
             log.warn("Invalid key direction given: %s", key.direction)
             return []
 
-
         available_moves = []
-        next_loc = evolver_fn(*loc)
+        next_loc = move_fn(*loc)
         while True:
             if isLocOutOfBounds(next_loc):
                 return available_moves
 
             elif self.getUnlocked(next_loc) == None:
                 available_moves.append(next_loc)
-                next_loc = evolver_fn(*next_loc)
+                next_loc = move_fn(*next_loc)
 
             elif self.getUnlocked(next_loc).team != key.team:
                 available_moves.append(next_loc)
@@ -291,10 +290,13 @@ class Board:
         else:
             return list(filter(isRespawnFree, silver))
 
+    @classmethod
+    def default(cls):
+        self = cls()
+        self._setup()
+        return self
 
-    def setup(self):
-        '''This function, as of now, sets up the pieces how
-            we have them at the beggining of a game'''
+    def _setup(self):
         gold1 = Key("A2", "South", False, "gold")
         gold2 = Key("A4", "South", False, "gold")
         gold3 = Key("A6", "South", False, "gold")
