@@ -2,7 +2,6 @@ import sys
 import logging_setup
 import logging
 import itertools
-from time import sleep
 from board import Board
 from key import Key
 from location import makeLocCartesian, makeLocAlphaNumeric, only_cartesian_locations
@@ -97,7 +96,7 @@ def highlightSquare(display, cartesian_loc, color):
         5
     )
 
-def handleKeyPress(event, *, display, board, turn, respawn):
+def handleKeyPress(event, *, board, turn, respawn):
     isRespawning = respawn.isRespawningNow
     alphaNumLoc = getLocOfKeyPress(event)
 
@@ -143,7 +142,6 @@ def handleKeyPress(event, *, display, board, turn, respawn):
                 SQUARESTOHIGHLIGHT.remove(move)
             else:
                 SQUARESTOHIGHLIGHT.append(move)
-            highlightSquare(display, (move[1], move[0]), (213,23,12))
 
         for i in rotatePrelim:
             if i in ROTATEPOINTS:
@@ -182,7 +180,10 @@ class Screen:
         self.resolution = resolution
 
     def init(self):
+        pygame.init()
+        pygame.display.set_caption("Keys")
         self._display = pygame.display.set_mode(self.resolution)
+        self.update()
 
     @property
     def _background(self):
@@ -236,13 +237,9 @@ def main():
     turn = Turn()
     board = Board.default()
 
-    pygame.init()
-
-    pygame.display.set_caption("Keys")
 
     screen = Screen(resolution=RESOLUTION, board=board)
     screen.init()
-    screen.update()
 
     while True:
         for event in pygame.event.get():
@@ -253,7 +250,6 @@ def main():
             if event.type == MOUSEBUTTONDOWN:
                 handleKeyPress(
                     event=event,
-                    display=screen.display,
                     board=board,
                     turn=turn,
                     respawn=respawn
