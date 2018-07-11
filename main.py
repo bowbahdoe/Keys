@@ -132,7 +132,7 @@ def handleKeyPress(event, *, display, board, turn, respawn):
         and board.getUnlocked(alphaNumLoc).team == turn.getTurn() \
         and not isRespawning:
         turn.setSelected(alphaNumLoc)
-        validMoves = board.getValidMovesOfKeyAtLoc(alphaNumLoc)
+        validMoves = board.validMovesOfKeyAtLoc(alphaNumLoc)
         validMoves.sort()
         SQUARESTOHIGHLIGHT.sort()
         rotatePrelim = board.getRotatePointsofKeyAtLoc(alphaNumLoc)

@@ -146,7 +146,9 @@ class Board:
 
 
     @only_cartesian_locations
-    def getValidMovesOfKeyAtLoc(self,loc):
+    def validMovesOfKeyAtLoc(self,loc):
+        """Given a location, gives all the moves that a key there
+        could make or an empty list if there isnt a piece there"""
         log = logging.getLogger(__name__)
 
         movers = {
