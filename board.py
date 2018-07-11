@@ -1,5 +1,5 @@
 import collections
-
+import logging
 from key import Key
 from location import makeLocCartesian, makeLocAlphaNumeric, only_cartesian_locations, \
     isLocOutOfBounds
@@ -147,141 +147,49 @@ class Board:
 
     @only_cartesian_locations
     def getValidMovesOfKeyAtLoc(self,loc):
-        #This is the most complex and untested function
-        #So yeah, use with caution
+        log = logging.getLogger(__name__)
+
+        movers = {
+            "North":     lambda x, y: (x - 1, y    ),
+            "NorthWest": lambda x, y: (x - 1, y - 1),
+            "NorthEast": lambda x, y: (x - 1, y + 1),
+            "West":      lambda x, y: (x    , y - 1),
+            "SouthWest": lambda x, y: (x + 1, y - 1),
+            "South":     lambda x, y: (x + 1, y    ),
+            "SouthEast": lambda x, y: (x + 1, y + 1),
+            "East":      lambda x, y: (x    , y + 1)
+        }
+
+
         key = self.getUnlocked(loc)
 
-        done = False
-        returner = []
+        if key == None:
+            log.error("No key at the given location")
+            return []
 
-        if key.direction == "North":
-            oneabove = (loc[0]-1,loc[1])
-            while done == False:
-                if oneabove[0] <1:
-                    done = True
+        evolver_fn = movers.get(key.direction)
 
-                elif self.getUnlocked(oneabove) == None:
-                    returner.append(oneabove)
-                    oneabove = (oneabove[0]-1,oneabove[1])
+        if evolver_fn == None:
+            log.error("Invalid key direction given: %s", key.direction)
+            return []
 
-                elif self.getUnlocked(oneabove).team != key.team:
-                    returner.append(oneabove)
-                    done = True
 
-                else:
-                    done = True
+        available_moves = []
+        next_loc = evolver_fn(*loc)
+        while True:
+            if isLocOutOfBounds(next_loc):
+                return available_moves
 
-            #done
-        elif key.direction == "NorthWest":
-            upleft = (loc[0]-1,loc[1]-1)
+            elif self.getUnlocked(next_loc) == None:
+                available_moves.append(next_loc)
+                next_loc = evolver_fn(*next_loc)
 
-            while done==False:
-                if upleft[1]<1 or upleft[0]<1:
-                    done = True
-                elif self.getUnlocked(upleft) == None:
-                    returner.append(upleft)
-                    upleft = (upleft[0]-1 ,upleft[1]-1)
-                elif self.getUnlocked(upleft).team != key.team:
-                    returner.append(upleft)
-                    done = True
-                else:
-                    done = True
-        elif key.direction == "NorthEast":
-            upright = (loc[0]-1,loc[1]+1)
+            elif self.getUnlocked(next_loc).team != key.team:
+                available_moves.append(next_loc)
+                return available_moves
 
-            while done==False:
-                if upright[1]> 8 or upright[0]<1:
-                    done = True
-                elif self.getUnlocked(upright) == None:
-                    returner.append(upright)
-                    upright = (upright[0]-1 ,upright[1]+1)
-                elif self.getUnlocked(upright).team != key.team:
-                    returner.append(upright)
-                    done = True
-                else:
-                    done = True
-        elif key.direction == "West":
-            oneleft = (loc[0] ,loc[1]-1)
-            while done == False:
-                if oneleft[1] <1:
-                    done = True
-                elif self.getUnlocked(oneleft) == None:
-                    returner.append(oneleft)
-                    oneleft = (oneleft[0] ,oneleft[1]-1)
-                elif self.getUnlocked(oneleft).team != key.team:
-                    returner.append(oneleft)
-                    done = True
-                else:
-                    done = True
-            #look at place 1 to left
-            #if place x<8
-            #break
-            #if enemy piece there, add place
-            #break
-            #else
-            #if own piece there
-            #break
-            #if blank, add place
-            #goto Top
-        elif key.direction == "SouthWest":
-            downleft = (loc[0]+1,loc[1]-1)
-
-            while done==False:
-                if downleft[1]<1 or downleft[0]> 8:
-                    done = True
-                elif self.getUnlocked(downleft) == None:
-                    returner.append(downleft)
-                    downleft = (downleft[0]+1 ,downleft[1]-1)
-                elif self.getUnlocked(downleft).team != key.team:
-                    returner.append(downleft)
-                    done = True
-                else:
-                    done = True
-        elif key.direction == "South":
-            onebelow = (loc[0]+1,loc[1])
-            while done == False:
-                if onebelow[0] > 8:
-
-                    done = True
-                elif self.getUnlocked(onebelow) == None:
-                    returner.append(onebelow)
-                    onebelow = (onebelow[0]+1,onebelow[1])
-                elif self.getUnlocked(onebelow).team != key.team:
-                    returner.append(onebelow)
-                    done = True
-                else:
-
-                    done = True
-        elif key.direction == "SouthEast":
-            downright = (loc[0]+1,loc[1]+1)
-
-            while done==False:
-                if downright[1]> 8 or downright[0]> 8:
-                    done = True
-                elif self.getUnlocked(downright) == None:
-                    returner.append(downright)
-                    downright = (downright[0]+1 ,downright[1]+1)
-                elif self.getUnlocked(downright).team != key.team:
-                    returner.append(downright)
-                    done = True
-                else:
-                    done = True
-        elif key.direction == "East":
-            oneright = (loc[0] ,loc[1] + 1)
-            while done == False:
-
-                if oneright[1] > 8:
-                    done = True
-                elif self.getUnlocked(oneright) == None:
-                    returner.append(oneright)
-                    oneright = (oneright[0] ,oneright[1] + 1)
-                elif self.getUnlocked(oneright).team != key.team:
-                    returner.append(oneright)
-                    done = True
-                else:
-                    done = True
-
-        return returner
+            else:
+                return available_moves
 
     def getDirectionIndicatedByRotatePoint(self, cartesian_loc):
         '''Seriosly, I need to do planning ahead before I
@@ -319,7 +227,6 @@ class Board:
 
         x, y = loc
 
-        done = False
         returner = []
         self.oneright =   (x    , y + 1)
         self.downright =  (x + 1, y + 1)
@@ -329,18 +236,23 @@ class Board:
         self.upright =    (x - 1, y + 1)
         self.upleft =     (x - 1, y - 1)
         self.oneabove =   (x - 1, y    )
+
         if key.direction != "North":
             returner.append(self.oneabove)
-        else: self.oneabove = None
+        else:
+            self.oneabove = None
         if key.direction != "East":
             returner.append(self.oneright)
-        else: self.oneright = None
+        else:
+            self.oneright = None
         if key.direction != "SouthEast":
             returner.append(self.downright)
-        else: self.downright = None
+        else:
+            self.downright = None
         if key.direction != "South":
             returner.append(self.onebelow)
-        else: self.onebelow = None
+        else:
+            self.onebelow = None
         if key.direction != "SouthWest":
             returner.append(self.downleft)
         else:
@@ -355,7 +267,8 @@ class Board:
             self.upright = None
         if key.direction != "NorthWest":
             returner.append(self.upleft)
-        else: self.upleft = None
+        else:
+            self.upleft = None
 
         for loc in returner:
             if isLocOutOfBounds(loc):
