@@ -164,13 +164,13 @@ class Board:
         key = self.getUnlocked(loc)
 
         if key == None:
-            log.error("No key at the given location")
+            log.warn("No key at the given location")
             return []
 
         evolver_fn = movers.get(key.direction)
 
         if evolver_fn == None:
-            log.error("Invalid key direction given: %s", key.direction)
+            log.warn("Invalid key direction given: %s", key.direction)
             return []
 
 
@@ -315,6 +315,6 @@ class Board:
         for place in self.board:
             unlockedPiece = place[1]
             lockedPiece = place[2]
-            if(not(unlockedPiece==None or lockedPiece==None)):
+            if unlockedPiece != None and lockedPiece != None:
                 if lockedPiece.team == unlockedPiece.team:
                     place[2] = None
