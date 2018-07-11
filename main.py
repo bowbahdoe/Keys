@@ -38,20 +38,14 @@ class Respawn:
 
 class Turn:
     def __init__(self):
-        self.turn = "gold"
+        self.teamPlaying = "gold"
         self.pieceSelected = None
 
-    def getTurn(self):
-        return self.turn
-
     def change(self):
-        if self.turn == "gold":
-            self.turn = "silver"
+        if self.teamPlaying == "gold":
+            self.teamPlaying = "silver"
         else:
-            self.turn ="gold"
-
-    def setSelected(self,loc):
-        self.pieceSelected = loc
+            self.teamPlaying = "gold"
 
 def drawKeyAtLoc(display, key, loc):
     if key != None:
@@ -126,9 +120,9 @@ def handleKeyPress(event, *, board, turn, respawn):
         turn.change()
 
     elif board.isPieceAtLocation(alphaNumLoc) \
-        and board.getUnlocked(alphaNumLoc).team == turn.getTurn() \
+        and board.getUnlocked(alphaNumLoc).team == turn.teamPlaying \
         and not isRespawning:
-        turn.setSelected(alphaNumLoc)
+        turn.pieceSelected = alphaNumLoc
         validMoves = board.validMovesOfKeyAtLoc(alphaNumLoc)
         validMoves.sort()
         SQUARESTOHIGHLIGHT.sort()
@@ -137,7 +131,6 @@ def handleKeyPress(event, *, board, turn, respawn):
             SQUARESTOHIGHLIGHT[:] =[]
             ROTATEPOINTS[:] = []
         for move in validMoves:
-            remove = False
             if move in SQUARESTOHIGHLIGHT:
                 SQUARESTOHIGHLIGHT.remove(move)
             else:
