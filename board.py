@@ -8,40 +8,10 @@ class Board:
     '''Begin the ugliest attempt at making the logic for a chess board in
         the history of computer science'''
     def __init__(self):
-        '''oh god here we go'''
-        self.board = [["A1",None,None],["A2",None,None],["A3",None,None],["A4",None,None],["A5",None,None],["A6",None,None],["A7",None,None],["A8",None,None],
-                      ["B1",None,None],["B2",None,None],["B3",None,None],["B4",None,None],["B5",None,None],["B6",None,None],["B7",None,None],["B8",None,None],
-                      ["C1",None,None],["C2",None,None],["C3",None,None],["C4",None,None],["C5",None,None],["C6",None,None],["C7",None,None],["C8",None,None],
-                      ["D1",None,None],["D2",None,None],["D3",None,None],["D4",None,None],["D5",None,None],["D6",None,None],["D7",None,None],["D8",None,None],
-                      ["E1",None,None],["E2",None,None],["E3",None,None],["E4",None,None],["E5",None,None],["E6",None,None],["E7",None,None],["E8",None,None],
-                      ["F1",None,None],["F2",None,None],["F3",None,None],["F4",None,None],["F5",None,None],["F6",None,None],["F7",None,None],["F8",None,None],
-                      ["G1",None,None],["G2",None,None],["G3",None,None],["G4",None,None],["G5",None,None],["G6",None,None],["G7",None,None],["G8",None,None],
-                      ["H1",None,None],["H2",None,None],["H3",None,None],["H4",None,None],["H5",None,None],["H6",None,None],["H7",None,None],["H8",None,None]]
-        #This deserves alot of explaination because it is the worst possible way to do this
-        #
-        #The board is a tuple of lists containing String objects in index[0] naming the location on the board
-        #
-        #          1|2|3|4|5|6|7|8
-        #          _______________
-        #        A|
-        #        B|
-        #        C|
-        #        D|
-        #        E|
-        #        F|
-        #        G|
-        #        H|
-        #
-        #The second item in the list is any key object that may be on that location and if there is no key there it
-        #will have a None value
-        #
-        #The third item is for storing any locked keys
-        #otherwise it will be None
+        self._board = collections.defaultdict(lambda: { "locked": None, "unlocked": None })
 
     def reset(self):
-        for location in self.board:
-            location[2] = None
-            location[1] = None
+        self._board.clear()
         self._setup()
 
 
@@ -50,8 +20,8 @@ class Board:
         silver = 0
         gold = 0
 
-        for location in self.board:
-            unlockedPiece = location[1]
+        for zone in self._board.values():
+            unlockedPiece = zone["unlocked"]
             if unlockedPiece != None:
                 if unlockedPiece.team == "gold":
                     gold += 1
@@ -60,93 +30,83 @@ class Board:
 
         return gold == 0 or silver == 0
 
-    def _findLocationIndexById(self,ID):
-        for square in self.board:
-            if square[0] == ID:
-                return self.board.index(square)
-
+    @only_cartesian_locations
     def movePieceToLocation(self, loc, piece):
         lastLoc = piece.location
-        lastLocOnBoard = self._findLocationIndexById(lastLoc)
+
         if self.isLockedPieceAtLocation(loc):
             self.lockPieceAtLocation(loc)
-        self.board[lastLocOnBoard][1] = None
-        newLocOnBoard = self._findLocationIndexById(loc)
+        self._board[lastLoc]["unlocked"] = None
 
-        self.board[newLocOnBoard][1] = piece
+        self._board[loc]["unlocked"] = piece
+
         piece.location = loc
 
 
+    @only_cartesian_locations
     def addPieceToLocation(self, loc, piece):
-        newLocOnBoard = self._findLocationIndexById(loc)
-        self.board[newLocOnBoard][1] = piece
+        self._board[loc]["unlocked"] = piece
         piece.location = loc
 
 
+    @only_cartesian_locations
     def addLockedPieceToLocation(self, loc, piece):
         piece.lock()
-        newLocOnBoard = self._findLocationIndexById(loc)
-        self.board[newLocOnBoard][2] = piece
+        self._board[loc]["locked"] = piece
         piece.location = loc
 
-
+    @only_cartesian_locations
     def lockPieceAtLocation(self,loc):
-        location_index = self._findLocationIndexById(loc)
-        if self.board[location_index][1] != None and self.board[2] == None:
-            self.board[location_index][2] = self.board[location_index][1]
-            self.board[location_index][1] = None
-            self.board[location_index][2].lock()
+        cell = self._board[loc]
+        unlocked = cell["unlocked"]
+        locked = cell["locked"]
+        if unlocked != None and locked == None:
+            unlocked.lock()
+            cell["locked"] = unlocked
+            cell["unlocked"] = None
         else:
             pass
 
 
+    @only_cartesian_locations
     def unlockPieceAtLocation(self,loc):
         #TODO make it so the piece is reset to a spawn point instead of
         #just getting moved to the unlocked space
-        Loc = self._findLocationIndexById(loc)
-        if self.board[Loc][2]!= None:
-            self.board[Loc][2] = None
+        if self._board[loc]["locked"] != None:
+            self._board[loc]["locked"] = None
         else:
             pass
 
     @only_cartesian_locations
     def removeLockedPiece(self, cartesian_loc):
-        loc = self._findLocationIndexById(cartesian_loc)
-        self.board[loc][2] = None
+        self._board[loc]["locked"] = None
 
+    @only_cartesian_locations
     def isPieceAtLocation(self,loc):
-        loc = self._findLocationIndexById(loc)
-        return self.board[loc][1] != None
+        return self._board[loc]["unlocked"] != None
 
 
+    @only_cartesian_locations
     def isLockedPieceAtLocation(self,loc):
-        loc = self._findLocationIndexById(loc)
-        return self.board[loc][2] != None
+        return self._board[loc]["locked"] != None
 
+    @only_cartesian_locations
     def getUnlocked(self, loc):
-        if type(loc) != str:
-            loc = makeLocAlphaNumeric(loc)
-
         if self.isPieceAtLocation(loc):
-            loc = self._findLocationIndexById(loc)
-            return self.board[loc][1]
+            return self._board[loc]["unlocked"]
+        else:
+            return None
+
+    @only_cartesian_locations
+    def getLocked(self, loc):
+        if self.isLockedPieceAtLocation(loc):
+            return self._board[loc]["locked"]
         else:
             return None
 
 
-    def getLocked(self, loc):
-        if type(loc) != str:
-            loc = makeLocAlphaNumeric(loc)
-
-        if self.isLockedPieceAtLocation(loc):
-            loc = self._findLocationIndexById(loc)
-            return self.board[loc][2]
-        else:
-            pass
-
-
     @only_cartesian_locations
-    def validMovesOfKeyAtLoc(self,loc):
+    def validMovesOfKeyAtLoc(self, loc):
         """Given a location, gives all the moves that a key there
         could make or an empty list if there isnt a piece there"""
         log = logging.getLogger(__name__)
@@ -316,9 +276,9 @@ class Board:
     def collapse_locked(self):
         """If a cell has a locked key and an unlocked key
         of the same team, deletes the locked key."""
-        for place in self.board:
-            unlockedPiece = place[1]
-            lockedPiece = place[2]
+        for cell in self._board.values():
+            unlockedPiece = cell["unlocked"]
+            lockedPiece = cell["locked"]
             if unlockedPiece != None and lockedPiece != None:
                 if lockedPiece.team == unlockedPiece.team:
-                    place[2] = None
+                    cell["locked"] = None
