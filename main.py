@@ -2,6 +2,7 @@ import sys
 import logging_setup
 import logging
 import itertools
+import view
 from board import Board
 from key import Key
 from location import makeLocCartesian, makeLocAlphaNumeric, only_cartesian_locations
@@ -49,7 +50,7 @@ class Turn:
 
 def drawKeyAtLoc(display, key, loc):
     if key != None:
-        texture = key.texture
+        texture = view.key_texture(key)
         texture = pygame.transform.scale(texture, (SHEIGHT, SWIDTH))
         display.blit(texture, (SWIDTH*(loc[1]-1), SHEIGHT*(loc[0]-1)))
 
