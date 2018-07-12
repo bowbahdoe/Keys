@@ -69,16 +69,6 @@ class Board:
         else:
             pass
 
-
-    @only_cartesian_locations
-    def unlockPieceAtLocation(self,loc):
-        #TODO make it so the piece is reset to a spawn point instead of
-        #just getting moved to the unlocked space
-        if self._board[loc]["locked"] != None:
-            self._board[loc]["locked"] = None
-        else:
-            pass
-
     @only_cartesian_locations
     def removeLockedPiece(self, cartesian_loc):
         self._board[loc]["locked"] = None
@@ -146,12 +136,11 @@ class Board:
             else:
                 return available_moves
 
+    @only_cartesian_locations
     def getDirectionIndicatedByRotatePoint(self, cartesian_loc):
         '''Seriosly, I need to do planning ahead before I
         do anything important. I always end up with about 20 stupid
         functions. Not-so-fun-ctions'''
-
-        loc = tuple(cartesian_loc)
 
         if loc == self.oneright:
             return "East"
