@@ -1,5 +1,4 @@
 import sys
-import logging_setup
 import logging
 import itertools
 import view
@@ -259,6 +258,16 @@ def main():
         screen.update()
         fpsclock.tick(FPS)
 
+def setup_logging():
+    root = logging.getLogger()
+    root.setLevel(logging.DEBUG)
+
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(formatter)
+    root.addHandler(ch)
 
 if __name__ == "__main__":
+    setup_logging()
     main()
