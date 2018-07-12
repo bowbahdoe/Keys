@@ -82,28 +82,20 @@ class Board:
         self._board[loc]["locked"] = None
 
     @only_cartesian_locations
-    def isPieceAtLocation(self,loc):
-        return self._board[loc]["unlocked"] != None
-
+    def isPieceAtLocation(self, loc):
+        return self.getUnlocked(loc) != None
 
     @only_cartesian_locations
-    def isLockedPieceAtLocation(self,loc):
-        return self._board[loc]["locked"] != None
+    def isLockedPieceAtLocation(self, loc):
+        return self.getLocked(loc) != None
 
     @only_cartesian_locations
     def getUnlocked(self, loc):
-        if self.isPieceAtLocation(loc):
-            return self._board[loc]["unlocked"]
-        else:
-            return None
+        return self._board[loc].get("unlocked", None)
 
     @only_cartesian_locations
     def getLocked(self, loc):
-        if self.isLockedPieceAtLocation(loc):
-            return self._board[loc]["locked"]
-        else:
-            return None
-
+        return self._board[loc].get("locked", None)
 
     @only_cartesian_locations
     def validMovesOfKeyAtLoc(self, loc):
