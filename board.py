@@ -8,7 +8,9 @@ class Board:
     '''Begin the ugliest attempt at making the logic for a chess board in
         the history of computer science'''
     def __init__(self):
-        self._board = collections.defaultdict(lambda: { "locked": None, "unlocked": None })
+        self._board = collections.defaultdict(
+            lambda: { "locked": None, "unlocked": None }
+        )
 
     def reset(self):
         self._board.clear()
