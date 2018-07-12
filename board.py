@@ -1,7 +1,7 @@
 import collections
 import logging
 from key import Key
-from location import makeLocCartesian, makeLocAlphaNumeric, only_cartesian_locations, \
+from location import makeLocCartesian, only_cartesian_locations, \
     isLocOutOfBounds
 
 class Board:

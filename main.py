@@ -4,7 +4,7 @@ import itertools
 import view
 from board import Board
 from key import Key
-from location import makeLocCartesian, makeLocAlphaNumeric, only_cartesian_locations
+from location import makeLocCartesian, only_cartesian_locations
 
 import pygame
 from pygame.locals import *
