@@ -90,24 +90,25 @@ def highlightSquare(display, cartesian_loc, color):
 
 def handleKeyPress(event, *, gamestate, board):
     isRespawning = gamestate.isRespawningNow
-    alphaNumLoc = getLocOfKeyPress(event)
+    clickLoc = getLocOfKeyPress(event)
 
-    lockedPieceAtDest = board.getLocked(alphaNumLoc)
-    unlockedPieceAtDest = board.getUnlocked(alphaNumLoc)
-    if makeLocCartesian(alphaNumLoc) in SQUARESTOHIGHLIGHT and not isRespawning:
+    lockedPieceAtDest = board.getLocked(clickLoc)
+    unlockedPieceAtDest = board.getUnlocked(clickLoc)
+
+    if clickLoc in SQUARESTOHIGHLIGHT and not isRespawning:
         if unlockedPieceAtDest != None:
             if unlockedPieceAtDest.team != board.getUnlocked(gamestate.pieceSelected).team:
-                board.addLockedPieceToLocation(alphaNumLoc,unlockedPieceAtDest)
+                board.addLockedPieceToLocation(clickLoc, unlockedPieceAtDest)
         if lockedPieceAtDest != None:
             if lockedPieceAtDest.team == board.getUnlocked(gamestate.pieceSelected).team:
                 gamestate.setRespawnOn(lockedPieceAtDest.team)
-        board.movePieceToLocation(alphaNumLoc,board.getUnlocked(gamestate.pieceSelected))
+        board.movePieceToLocation(clickLoc, board.getUnlocked(gamestate.pieceSelected))
 
         SQUARESTOHIGHLIGHT[:] =[]
         ROTATEPOINTS[:] = []
         gamestate.changeTurn()
-    elif makeLocCartesian(alphaNumLoc) in ROTATEPOINTS and not isRespawning:
-        direc = board.getDirectionIndicatedByRotatePoint(makeLocCartesian(alphaNumLoc))
+    elif clickLoc in ROTATEPOINTS and not isRespawning:
+        direc = board.getDirectionIndicatedByRotatePoint(clickLoc)
         piece = board.getUnlocked(gamestate.pieceSelected)
 
         piece.direction = direc
@@ -117,14 +118,14 @@ def handleKeyPress(event, *, gamestate, board):
         ROTATEPOINTS[:] = []
         gamestate.changeTurn()
 
-    elif board.isPieceAtLocation(alphaNumLoc) \
-        and board.getUnlocked(alphaNumLoc).team == gamestate.teamPlaying \
+    elif board.isPieceAtLocation(clickLoc) \
+        and board.getUnlocked(clickLoc).team == gamestate.teamPlaying \
         and not isRespawning:
-        gamestate.pieceSelected = alphaNumLoc
-        validMoves = board.validMovesOfKeyAtLoc(alphaNumLoc)
+        gamestate.pieceSelected = clickLoc
+        validMoves = board.validMovesOfKeyAtLoc(clickLoc)
         validMoves.sort()
         SQUARESTOHIGHLIGHT.sort()
-        rotatePrelim = board.getRotatePointsofKeyAtLoc(alphaNumLoc)
+        rotatePrelim = board.getRotatePointsofKeyAtLoc(clickLoc)
         if validMoves != SQUARESTOHIGHLIGHT:
             SQUARESTOHIGHLIGHT[:] =[]
             ROTATEPOINTS[:] = []
@@ -148,13 +149,13 @@ def handleKeyPress(event, *, gamestate, board):
         for i in board.getFreeRespawnPointsForTeam(gamestate.teamRespawning):
             if i not in RESPAWNPOINTS:
                 RESPAWNPOINTS.append(makeLocCartesian(i))
-        if makeLocCartesian(alphaNumLoc) in RESPAWNPOINTS:
+        if clickLoc in RESPAWNPOINTS:
             if gamestate.teamRespawning == "gold":
-                key = Key(alphaNumLoc,"South",False,"gold")
-                board.addPieceToLocation(alphaNumLoc,key)
+                key = Key(clickLoc, "South", False, "gold")
+                board.addPieceToLocation(clickLoc, key)
             elif gamestate.teamRespawning == "silver":
-                key = Key(alphaNumLoc,"North",False,"silver")
-                board.addPieceToLocation(alphaNumLoc,key)
+                key = Key(clickLoc, "North", False, "silver")
+                board.addPieceToLocation(clickLoc, key)
             RESPAWNPOINTS[:] = []
             gamestate.setRespawnOff()
             board.collapse_locked()
@@ -163,10 +164,11 @@ def getLocOfKeyPress(event):
     log = logging.getLogger(__name__)
     log.debug("User clicked at %s", event.pos)
     clickX, clickY = event.pos
-    return makeLocAlphaNumeric((clickY // SHEIGHT + 1, clickX // SWIDTH + 1))
+    return (clickY // SHEIGHT + 1, clickX // SWIDTH + 1)
 
 class Screen:
-    def __init__(self, *, board, resolution):
+    def __init__(self, *, gamestate, board, resolution):
+        self.gamestate = gamestate
         self.board = board
         self.resolution = resolution
 
@@ -214,10 +216,13 @@ class Screen:
         draw(self._locked_keys)
         draw(self._unlocked_keys)
 
+
         for location in ROTATEPOINTS:
             highlightSquare(self.display, (location[1], location[0]), (23,223,12))
+
         for location in SQUARESTOHIGHLIGHT:
             highlightSquare(self.display, (location[1], location[0]), (213,23,12))
+
         for location in RESPAWNPOINTS:
             highlightSquare(self.display, (location[1], location[0]), (233,34,223))
 
@@ -228,7 +233,7 @@ def main():
     board = Board.default()
 
 
-    screen = Screen(resolution=RESOLUTION, board=board)
+    screen = Screen(resolution=RESOLUTION, gamestate=gamestate, board=board)
     screen.init()
 
     while True:
