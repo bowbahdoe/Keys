@@ -142,21 +142,21 @@ class Board:
         do anything important. I always end up with about 20 stupid
         functions. Not-so-fun-ctions'''
 
-        if loc == self.oneright:
+        if cartesian_loc == self.oneright:
             return "East"
-        elif loc == self.downright:
+        elif cartesian_loc == self.downright:
             return "SouthEast"
-        elif loc == self.onebelow:
+        elif cartesian_loc == self.onebelow:
             return "South"
-        elif loc == self.downleft:
+        elif cartesian_loc == self.downleft:
             return "SouthWest"
-        elif loc == self.oneleft:
+        elif cartesian_loc == self.oneleft:
             return "West"
-        elif loc == self.upright:
+        elif cartesian_loc == self.upright:
             return "NorthEast"
-        elif loc == self.upleft:
+        elif cartesian_loc == self.upleft:
             return "NorthWest"
-        elif loc == self.oneabove:
+        elif cartesian_loc == self.oneabove:
             return "North"
         else:
             return None

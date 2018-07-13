@@ -44,49 +44,6 @@ class GameState:
         else:
             self.teamPlaying = "gold"
 
-def drawKeyAtLoc(display, key, loc):
-    if key != None:
-        texture = view.key_texture(key)
-        texture = pygame.transform.scale(texture, (SHEIGHT, SWIDTH))
-        display.blit(texture, (SWIDTH*(loc[1]-1), SHEIGHT*(loc[0]-1)))
-
-def drawKeysOnBoard(display, board):
-    for loc in all_locations():
-        key = board.getUnlocked(loc)
-        drawKeyAtLoc(display, key, loc)
-
-def drawLockedKeysOnBoard(display, board):
-    for loc in all_locations():
-        key = board.getLocked(loc)
-        drawKeyAtLoc(display, key, loc)
-
-def all_locations():
-    """Returns an iterator over all the possible cartesian locations
-    on an 8x8 board"""
-    return itertools.product(range(1, 9), range(1, 9))
-
-def drawBoard(display, color1=(0,0,0), color2=(100,100,100)):
-    display.fill(color1)
-    for row in range(8):
-        for column in range(8):
-            if column % 2 == row % 2:
-                pygame.draw.rect(
-                    display,
-                    color2,
-                    (column * SHEIGHT, row * SWIDTH, SHEIGHT, SWIDTH)
-                )
-
-@only_cartesian_locations
-def highlightSquare(display, cartesian_loc, color):
-    x = cartesian_loc[0] - 1
-    y = cartesian_loc[1] - 1
-    pygame.draw.rect(
-        display,
-        color,
-        (x * SWIDTH, y * SHEIGHT, SWIDTH, SHEIGHT),
-        5
-    )
-
 def handleKeyPress(event, *, gamestate, board):
     isRespawning = gamestate.isRespawningNow
     clickLoc = getLocOfKeyPress(event)
@@ -178,23 +135,24 @@ class Screen:
         pygame.display.set_caption("Keys")
         self._display = pygame.display.set_mode(self.resolution)
         self.update()
+        return self
 
     @property
     def _background(self):
         background = self._transparent_surface()
-        drawBoard(background)
+        Screen._drawBoard(background)
         return background
 
     @property
     def _unlocked_keys(self):
         unlocked_keys = self._transparent_surface()
-        drawKeysOnBoard(unlocked_keys, self.board)
+        Screen._drawKeysOnBoard(unlocked_keys, self.board)
         return unlocked_keys
 
     @property
     def _locked_keys(self):
         locked_keys = self._transparent_surface()
-        drawLockedKeysOnBoard(locked_keys, self.board)
+        Screen._drawLockedKeysOnBoard(locked_keys, self.board)
         return locked_keys
 
     @property
@@ -219,15 +177,65 @@ class Screen:
 
 
         for location in ROTATEPOINTS:
-            highlightSquare(self.display, (location[1], location[0]), (23,223,12))
+            Screen._highlightSquare(self.display, (location[1], location[0]), (23,223,12))
 
         for location in SQUARESTOHIGHLIGHT:
-            highlightSquare(self.display, (location[1], location[0]), (213,23,12))
+            Screen._highlightSquare(self.display, (location[1], location[0]), (213,23,12))
 
         for location in RESPAWNPOINTS:
-            highlightSquare(self.display, (location[1], location[0]), (233,34,223))
+            Screen._highlightSquare(self.display, (location[1], location[0]), (233,34,223))
 
         pygame.display.update()
+
+    @staticmethod
+    def _drawKeyAtLoc(display, key, loc):
+        if key != None:
+            texture = view.key_texture(key)
+            texture = pygame.transform.scale(texture, (SHEIGHT, SWIDTH))
+            display.blit(texture, (SWIDTH*(loc[1]-1), SHEIGHT*(loc[0]-1)))
+
+    @staticmethod
+    def _drawKeysOnBoard(display, board):
+        for loc in Screen._all_locations():
+            key = board.getUnlocked(loc)
+            Screen._drawKeyAtLoc(display, key, loc)
+
+    @staticmethod
+    def _drawLockedKeysOnBoard(display, board):
+        for loc in Screen._all_locations():
+            key = board.getLocked(loc)
+            Screen._drawKeyAtLoc(display, key, loc)
+
+    @staticmethod
+    def _all_locations():
+        """Returns an iterator over all the possible cartesian locations
+        on an 8x8 board"""
+        return itertools.product(range(1, 9), range(1, 9))
+
+    @staticmethod
+    def _drawBoard(display, color1=(0,0,0), color2=(100,100,100)):
+        display.fill(color1)
+        for row in range(8):
+            for column in range(8):
+                if column % 2 == row % 2:
+                    pygame.draw.rect(
+                        display,
+                        color2,
+                        (column * SHEIGHT, row * SWIDTH, SHEIGHT, SWIDTH)
+                    )
+
+
+    @staticmethod
+    @only_cartesian_locations
+    def _highlightSquare(display, cartesian_loc, color):
+        x = cartesian_loc[0] - 1
+        y = cartesian_loc[1] - 1
+        pygame.draw.rect(
+            display,
+            color,
+            (x * SWIDTH, y * SHEIGHT, SWIDTH, SHEIGHT),
+            5
+        )
 
 def main():
     gamestate = GameState()
