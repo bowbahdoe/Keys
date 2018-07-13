@@ -16,7 +16,6 @@ RESOLUTION = (DISPLAYHEIGHT,DISPLAYWIDTH)
 SWIDTH = DISPLAYWIDTH // 8
 SHEIGHT = DISPLAYHEIGHT // 8
 FPS = 30
-fpsclock = pygame.time.Clock()
 
 SQUARESTOHIGHLIGHT = []
 ROTATEPOINTS = []
@@ -125,15 +124,17 @@ def getLocOfKeyPress(event):
     return board_location
 
 class Screen:
-    def __init__(self, *, gamestate, board, resolution):
+    def __init__(self, *, fps, gamestate, board, resolution):
         self.gamestate = gamestate
         self.board = board
         self.resolution = resolution
+        self.fps = fps
 
     def init(self):
         pygame.init()
         pygame.display.set_caption("Keys")
         self._display = pygame.display.set_mode(self.resolution)
+        self._fpsclock = pygame.time.Clock()
         self.update()
         return self
 
@@ -155,13 +156,6 @@ class Screen:
         Screen._drawLockedKeysOnBoard(locked_keys, self.board)
         return locked_keys
 
-    @property
-    def display(self):
-        if self._display == None:
-            raise Exception("The display has not been created yet")
-        else:
-            return self._display
-
     def _transparent_surface(self):
         surface = pygame.Surface(self.resolution, pygame.SRCALPHA, 32)
         surface.convert_alpha()
@@ -169,7 +163,7 @@ class Screen:
 
     def update(self):
         def draw(surface):
-            self.display.blit(surface, (0, 0))
+            self._display.blit(surface, (0, 0))
 
         draw(self._background)
         draw(self._locked_keys)
@@ -177,15 +171,16 @@ class Screen:
 
 
         for location in ROTATEPOINTS:
-            Screen._highlightSquare(self.display, (location[1], location[0]), (23,223,12))
+            Screen._highlightSquare(self._display, (location[1], location[0]), (23,223,12))
 
         for location in SQUARESTOHIGHLIGHT:
-            Screen._highlightSquare(self.display, (location[1], location[0]), (213,23,12))
+            Screen._highlightSquare(self._display, (location[1], location[0]), (213,23,12))
 
         for location in RESPAWNPOINTS:
-            Screen._highlightSquare(self.display, (location[1], location[0]), (233,34,223))
+            Screen._highlightSquare(self._display, (location[1], location[0]), (233,34,223))
 
         pygame.display.update()
+        self._fpsclock.tick(self.fps)
 
     @staticmethod
     def _drawKeyAtLoc(display, key, loc):
@@ -242,7 +237,7 @@ def main():
     board = Board.default()
 
 
-    screen = Screen(resolution=RESOLUTION, gamestate=gamestate, board=board)
+    screen = Screen(fps=FPS, resolution=RESOLUTION, gamestate=gamestate, board=board)
     screen.init()
 
     while True:
@@ -266,7 +261,6 @@ def main():
             board.reset()
 
         screen.update()
-        fpsclock.tick(FPS)
 
 def setup_logging():
     root = logging.getLogger()
