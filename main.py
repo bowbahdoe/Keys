@@ -163,7 +163,9 @@ def getLocOfKeyPress(event):
     log = logging.getLogger(__name__)
     log.debug("User clicked at %s", event.pos)
     clickX, clickY = event.pos
-    return (clickY // SHEIGHT + 1, clickX // SWIDTH + 1)
+    board_location = (clickY // SHEIGHT + 1, clickX // SWIDTH + 1)
+    log.debug("Click Interpreted as being at %s", board_location)
+    return board_location
 
 class Screen:
     def __init__(self, *, gamestate, board, resolution):
