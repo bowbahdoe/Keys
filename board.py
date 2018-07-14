@@ -265,3 +265,25 @@ class Board:
             if unlockedPiece != None and lockedPiece != None:
                 if lockedPiece.team == unlockedPiece.team:
                     cell["locked"] = None
+
+    def summarize(self):
+        """Returns a JSON-friendly representation of this board"""
+        summary = { "unlocked": {}, "locked": {} }
+
+        for location, cell in self._board.items():
+            zero_indexed_location = location[0] - 1, location[1] - 1
+            
+            unlocked_piece = cell["unlocked"]
+            if unlocked_piece != None:
+                summary["unlocked"][zero_indexed_location] = {
+                    "team": unlocked_piece.team,
+                    "direction": unlocked_piece.direction
+                }
+
+            locked_piece = cell["locked"]
+            if locked_piece != None:
+                summary["locked"][zero_indexed_location] = {
+                    "team": locked_piece.team
+                }
+
+        return summary

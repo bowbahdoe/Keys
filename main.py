@@ -43,10 +43,26 @@ class GameState:
         else:
             self.teamPlaying = "gold"
 
+def determine_mode(gamestate, board):
+    """NOTE: Broken with the rest of the implementation.
+    Should return the current gamestate for use in making the logic
+    more useable from an outside program. """
+    if gamestate.teamPlaying == "gold":
+        prefix = "GOLD_"
+    else:
+        prefix = "SILVER_"
+
+    if gamestate.isRespawningNow:
+        return prefix + "RESPAWNING"
+    elif board.isGameOver:
+        return prefix + "WIN"
+    else:
+        return prefix + "PLAY"
+
+
 def handleKeyPress(event, *, gamestate, board):
     isRespawning = gamestate.isRespawningNow
     clickLoc = getLocOfKeyPress(event)
-
     lockedPieceAtDest = board.getLocked(clickLoc)
     unlockedPieceAtDest = board.getUnlocked(clickLoc)
 
@@ -252,6 +268,7 @@ def main():
                     board=board,
                     gamestate=gamestate
                 )
+                print(board.summarize())
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.quit()
