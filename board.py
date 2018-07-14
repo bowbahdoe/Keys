@@ -137,88 +137,32 @@ class Board:
                 return available_moves
 
     @only_cartesian_locations
-    def getDirectionIndicatedByRotatePoint(self, cartesian_loc):
-        '''Seriosly, I need to do planning ahead before I
-        do anything important. I always end up with about 20 stupid
-        functions. Not-so-fun-ctions'''
-
-        if cartesian_loc == self.oneright:
-            return "East"
-        elif cartesian_loc == self.downright:
-            return "SouthEast"
-        elif cartesian_loc == self.onebelow:
-            return "South"
-        elif cartesian_loc == self.downleft:
-            return "SouthWest"
-        elif cartesian_loc == self.oneleft:
-            return "West"
-        elif cartesian_loc == self.upright:
-            return "NorthEast"
-        elif cartesian_loc == self.upleft:
-            return "NorthWest"
-        elif cartesian_loc == self.oneabove:
-            return "North"
-        else:
-            return None
-
-
-    @only_cartesian_locations
     def getRotatePointsofKeyAtLoc(self, loc):
+        log = logging.getLogger(__name__)
         key = self.getUnlocked(loc)
 
         if key == None:
-            raise Exception("No key at the given location")
+            log.warn("No key at the given location")
+            return {}
 
         x, y = loc
+        rotate_map = {
+            "North":      (x - 1, y    ),
+            "East":       (x    , y + 1),
+            "SouthEast":  (x + 1, y + 1),
+            "South":      (x + 1, y    ),
+            "SouthWest":  (x + 1, y - 1),
+            "West":       (x    , y - 1),
+            "NorthEast" : (x - 1, y + 1),
+            "NorthWest":  (x - 1, y - 1)
+        }
 
-        returner = []
-        self.oneright =   (x    , y + 1)
-        self.downright =  (x + 1, y + 1)
-        self.onebelow =   (x + 1, y    )
-        self.downleft =   (x + 1, y - 1)
-        self.oneleft =    (x    , y - 1)
-        self.upright =    (x - 1, y + 1)
-        self.upleft =     (x - 1, y - 1)
-        self.oneabove =   (x - 1, y    )
+        rotate_map.pop(key.direction, None)
+        for direction, location in list(rotate_map.items()):
+            if isLocOutOfBounds(location):
+                rotate_map.pop(direction, None)
 
-        if key.direction != "North":
-            returner.append(self.oneabove)
-        else:
-            self.oneabove = None
-        if key.direction != "East":
-            returner.append(self.oneright)
-        else:
-            self.oneright = None
-        if key.direction != "SouthEast":
-            returner.append(self.downright)
-        else:
-            self.downright = None
-        if key.direction != "South":
-            returner.append(self.onebelow)
-        else:
-            self.onebelow = None
-        if key.direction != "SouthWest":
-            returner.append(self.downleft)
-        else:
-            self.downleft = None
-        if key.direction != "West":
-            returner.append(self.oneleft)
-        else:
-            self.oneleft = None
-        if key.direction != "NorthEast":
-            returner.append(self.upright)
-        else:
-            self.upright = None
-        if key.direction != "NorthWest":
-            returner.append(self.upleft)
-        else:
-            self.upleft = None
-
-        for loc in returner:
-            if isLocOutOfBounds(loc):
-                returner.remove(loc)
-
-        return returner
+        return rotate_map
 
 
     def getFreeRespawnPointsForTeam(self, team):
@@ -272,12 +216,12 @@ class Board:
 
         for location, cell in self._board.items():
             zero_indexed_location = location[0] - 1, location[1] - 1
-            
+
             unlocked_piece = cell["unlocked"]
             if unlocked_piece != None:
                 summary["unlocked"][zero_indexed_location] = {
                     "team": unlocked_piece.team,
-                    "direction": unlocked_piece.direction
+                    "direction": unlocked_piece.direction.lower()
                 }
 
             locked_piece = cell["locked"]

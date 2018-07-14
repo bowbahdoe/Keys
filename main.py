@@ -79,7 +79,9 @@ def handleKeyPress(event, *, gamestate, board):
         ROTATEPOINTS[:] = []
         gamestate.changeTurn()
     elif clickLoc in ROTATEPOINTS and not isRespawning:
-        direc = board.getDirectionIndicatedByRotatePoint(clickLoc)
+        def rev_dict(d):
+            return {v: k for k, v in d.items()}
+        direc = rev_dict(board.getRotatePointsofKeyAtLoc(gamestate.pieceSelected))[clickLoc]
         piece = board.getUnlocked(gamestate.pieceSelected)
 
         piece.direction = direc
@@ -96,7 +98,7 @@ def handleKeyPress(event, *, gamestate, board):
         validMoves = board.validMovesOfKeyAtLoc(clickLoc)
         validMoves.sort()
         SQUARESTOHIGHLIGHT.sort()
-        rotatePrelim = board.getRotatePointsofKeyAtLoc(clickLoc)
+        rotatePrelim = board.getRotatePointsofKeyAtLoc(clickLoc).values()
         if validMoves != SQUARESTOHIGHLIGHT:
             SQUARESTOHIGHLIGHT[:] =[]
             ROTATEPOINTS[:] = []
@@ -268,7 +270,6 @@ def main():
                     board=board,
                     gamestate=gamestate
                 )
-                print(board.summarize())
 
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.quit()
