@@ -65,7 +65,7 @@ def handleKeyPress(*, clickLoc, gamestate):
     isRespawning = gamestate.isRespawningNow
 
     if not isRespawning:
-        if clickLoc in SQUARESTOHIGHLIGHT and not isRespawning:
+        if clickLoc in SQUARESTOHIGHLIGHT:
             if unlockedPieceAtDest != None:
                 if unlockedPieceAtDest.team != board.getUnlocked(gamestate.pieceSelected).team:
                     board.addLockedPieceToLocation(clickLoc, unlockedPieceAtDest)
@@ -77,7 +77,8 @@ def handleKeyPress(*, clickLoc, gamestate):
             SQUARESTOHIGHLIGHT[:] =[]
             ROTATEPOINTS[:] = []
             gamestate.changeTurn()
-        elif clickLoc in ROTATEPOINTS and not isRespawning:
+
+        elif clickLoc in ROTATEPOINTS:
             def rev_dict(d):
                 return {v: k for k, v in d.items()}
             direc = rev_dict(board.getRotatePointsofKeyAtLoc(gamestate.pieceSelected))[clickLoc]
@@ -91,15 +92,14 @@ def handleKeyPress(*, clickLoc, gamestate):
             gamestate.changeTurn()
 
         elif board.isPieceAtLocation(clickLoc) \
-            and board.getUnlocked(clickLoc).team == gamestate.teamPlaying \
-            and not isRespawning:
+            and board.getUnlocked(clickLoc).team == gamestate.teamPlaying:
             gamestate.pieceSelected = clickLoc
             validMoves = board.validMovesOfKeyAtLoc(clickLoc)
             rotatePrelim = board.getRotatePointsofKeyAtLoc(clickLoc).values()
             SQUARESTOHIGHLIGHT[:] = validMoves
             ROTATEPOINTS[:] = rotatePrelim
 
-        elif not isRespawning:
+        else:
             SQUARESTOHIGHLIGHT[:] = []
             ROTATEPOINTS[:] = []
             gamestate.pieceSelected = None
