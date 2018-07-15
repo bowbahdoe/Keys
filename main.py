@@ -19,10 +19,11 @@ SQUARESTOHIGHLIGHT = []
 ROTATEPOINTS = []
 
 class GameState:
-    def __init__(self):
+    def __init__(self, board):
         self.teamRespawning = None
         self.teamPlaying = "gold"
         self.pieceSelected = None
+        self.board = board
 
     def setRespawnOn(self,team):
         self.teamRespawning = team
@@ -57,10 +58,11 @@ def determine_mode(gamestate, board):
         return prefix + "PLAY"
 
 
-def handleKeyPress(*, clickLoc, gamestate, board):
-    isRespawning = gamestate.isRespawningNow
+def handleKeyPress(*, clickLoc, gamestate):
+    board = gamestate.board
     lockedPieceAtDest = board.getLocked(clickLoc)
     unlockedPieceAtDest = board.getUnlocked(clickLoc)
+    isRespawning = gamestate.isRespawningNow
 
     if clickLoc in SQUARESTOHIGHLIGHT and not isRespawning:
         if unlockedPieceAtDest != None:
@@ -116,9 +118,9 @@ def handleKeyPress(*, clickLoc, gamestate, board):
 
 
 class Screen:
-    def __init__(self, *, fps, gamestate, board, resolution):
+    def __init__(self, *, fps, gamestate, resolution):
         self.gamestate = gamestate
-        self.board = board
+        self.board = gamestate.board
         self.resolution = resolution
         self.fps = fps
 
@@ -235,11 +237,9 @@ class Screen:
         )
 
 def main():
-    gamestate = GameState()
-    board = Board.default()
+    gamestate = GameState(Board.default())
 
-
-    screen = Screen(fps=FPS, resolution=RESOLUTION, gamestate=gamestate, board=board)
+    screen = Screen(fps=FPS, resolution=RESOLUTION, gamestate=gamestate)
     screen.init()
 
     while True:
@@ -251,7 +251,6 @@ def main():
             if event.type == MOUSEBUTTONDOWN:
                 handleKeyPress(
                     clickLoc=screen.getLocOfKeyPress(event),
-                    board=board,
                     gamestate=gamestate
                 )
 
@@ -259,8 +258,8 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        if board.isGameOver:
-            board.reset()
+        if gamestate.board.isGameOver:
+            gamestate.board.reset()
 
         screen.update()
 
