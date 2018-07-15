@@ -13,8 +13,6 @@ from pygame.locals import *
 DISPLAYHEIGHT = 600
 DISPLAYWIDTH = 600
 RESOLUTION = (DISPLAYHEIGHT,DISPLAYWIDTH)
-SWIDTH = DISPLAYWIDTH // 8
-SHEIGHT = DISPLAYHEIGHT // 8
 FPS = 30
 
 SQUARESTOHIGHLIGHT = []
@@ -59,9 +57,8 @@ def determine_mode(gamestate, board):
         return prefix + "PLAY"
 
 
-def handleKeyPress(event, *, gamestate, board):
+def handleKeyPress(clickLoc, *, gamestate, board):
     isRespawning = gamestate.isRespawningNow
-    clickLoc = getLocOfKeyPress(event)
     lockedPieceAtDest = board.getLocked(clickLoc)
     unlockedPieceAtDest = board.getUnlocked(clickLoc)
 
@@ -131,13 +128,6 @@ def handleKeyPress(event, *, gamestate, board):
             gamestate.setRespawnOff()
             board.collapse_locked()
 
-def getLocOfKeyPress(event):
-    log = logging.getLogger(__name__)
-    log.debug("User clicked at %s", event.pos)
-    clickX, clickY = event.pos
-    board_location = (clickY // SHEIGHT + 1, clickX // SWIDTH + 1)
-    log.debug("Click Interpreted as being at %s", board_location)
-    return board_location
 
 class Screen:
     def __init__(self, *, fps, gamestate, board, resolution):
@@ -154,22 +144,38 @@ class Screen:
         self.update()
         return self
 
+    def getLocOfKeyPress(self, event):
+        log = logging.getLogger(__name__)
+        log.debug("User clicked at %s", event.pos)
+        clickX, clickY = event.pos
+        board_location = (clickY // self._sheight + 1, clickX // self._swidth + 1)
+        log.debug("Click Interpreted as being at %s", board_location)
+        return board_location
+
+    @property
+    def _swidth(self):
+        return self.resolution[0] // 8
+
+    @property
+    def _sheight(self):
+        return self.resolution[1] // 8
+
     @property
     def _background(self):
         background = self._transparent_surface()
-        Screen._drawBoard(background)
+        self._drawBoard(background)
         return background
 
     @property
     def _unlocked_keys(self):
         unlocked_keys = self._transparent_surface()
-        Screen._drawKeysOnBoard(unlocked_keys, self.board)
+        self._drawKeysOnBoard(unlocked_keys, self.board)
         return unlocked_keys
 
     @property
     def _locked_keys(self):
         locked_keys = self._transparent_surface()
-        Screen._drawLockedKeysOnBoard(locked_keys, self.board)
+        self._drawLockedKeysOnBoard(locked_keys, self.board)
         return locked_keys
 
     def _transparent_surface(self):
@@ -187,35 +193,32 @@ class Screen:
 
 
         for location in ROTATEPOINTS:
-            Screen._highlightSquare(self._display, (location[1], location[0]), (23,223,12))
+            self._highlightSquare(self._display, (location[1], location[0]), (23,223,12))
 
         for location in SQUARESTOHIGHLIGHT:
-            Screen._highlightSquare(self._display, (location[1], location[0]), (213,23,12))
+            self._highlightSquare(self._display, (location[1], location[0]), (213,23,12))
 
         for location in self.board.getFreeRespawnPointsForTeam(self.gamestate.teamRespawning):
-            Screen._highlightSquare(self._display, (location[1], location[0]), (233,34,223))
+            self._highlightSquare(self._display, (location[1], location[0]), (233,34,223))
 
         pygame.display.update()
         self._fpsclock.tick(self.fps)
 
-    @staticmethod
-    def _drawKeyAtLoc(display, key, loc):
+    def _drawKeyAtLoc(self, display, key, loc):
         if key != None:
             texture = view.key_texture(key)
-            texture = pygame.transform.scale(texture, (SHEIGHT, SWIDTH))
-            display.blit(texture, (SWIDTH*(loc[1]-1), SHEIGHT*(loc[0]-1)))
+            texture = pygame.transform.scale(texture, (self._sheight, self._swidth))
+            display.blit(texture, (self._swidth*(loc[1]-1), self._sheight*(loc[0]-1)))
 
-    @staticmethod
-    def _drawKeysOnBoard(display, board):
+    def _drawKeysOnBoard(self, display, board):
         for loc in Screen._all_locations():
             key = board.getUnlocked(loc)
-            Screen._drawKeyAtLoc(display, key, loc)
+            self._drawKeyAtLoc(display, key, loc)
 
-    @staticmethod
-    def _drawLockedKeysOnBoard(display, board):
+    def _drawLockedKeysOnBoard(self, display, board):
         for loc in Screen._all_locations():
             key = board.getLocked(loc)
-            Screen._drawKeyAtLoc(display, key, loc)
+            self._drawKeyAtLoc(display, key, loc)
 
     @staticmethod
     def _all_locations():
@@ -223,8 +226,7 @@ class Screen:
         on an 8x8 board"""
         return itertools.product(range(1, 9), range(1, 9))
 
-    @staticmethod
-    def _drawBoard(display, color1=(0,0,0), color2=(100,100,100)):
+    def _drawBoard(self, display, color1=(0,0,0), color2=(100,100,100)):
         display.fill(color1)
         for row in range(8):
             for column in range(8):
@@ -232,19 +234,18 @@ class Screen:
                     pygame.draw.rect(
                         display,
                         color2,
-                        (column * SHEIGHT, row * SWIDTH, SHEIGHT, SWIDTH)
+                        (column * self._sheight, row * self._swidth, self._sheight, self._swidth)
                     )
 
 
-    @staticmethod
     @only_cartesian_locations
-    def _highlightSquare(display, cartesian_loc, color):
+    def _highlightSquare(self, display, cartesian_loc, color):
         x = cartesian_loc[0] - 1
         y = cartesian_loc[1] - 1
         pygame.draw.rect(
             display,
             color,
-            (x * SWIDTH, y * SHEIGHT, SWIDTH, SHEIGHT),
+            (x * self._swidth, y * self._sheight, self._swidth, self._sheight),
             5
         )
 
@@ -264,7 +265,8 @@ def main():
 
             if event.type == MOUSEBUTTONDOWN:
                 handleKeyPress(
-                    event=event,
+
+                    clickLoc=screen.getLocOfKeyPress(event),
                     board=board,
                     gamestate=gamestate
                 )
