@@ -1,7 +1,5 @@
 import sys
 import logging
-import itertools
-import view
 from board import Board
 from key import Key
 from location import makeLocCartesian, only_cartesian_locations
