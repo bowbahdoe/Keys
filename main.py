@@ -57,7 +57,7 @@ def determine_mode(gamestate, board):
         return prefix + "PLAY"
 
 
-def handleKeyPress(clickLoc, *, gamestate, board):
+def handleKeyPress(*, clickLoc, gamestate, board):
     isRespawning = gamestate.isRespawningNow
     lockedPieceAtDest = board.getLocked(clickLoc)
     unlockedPieceAtDest = board.getUnlocked(clickLoc)
@@ -265,7 +265,6 @@ def main():
 
             if event.type == MOUSEBUTTONDOWN:
                 handleKeyPress(
-
                     clickLoc=screen.getLocOfKeyPress(event),
                     board=board,
                     gamestate=gamestate
