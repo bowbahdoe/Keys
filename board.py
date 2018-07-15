@@ -184,8 +184,10 @@ class Board:
 
         if team == "gold":
             points = gold
-        else:
+        elif team == "silver":
             points = silver
+        else:
+            points = []
 
         return [ makeLocCartesian(loc) for loc in points
                                        if isRespawnFree(loc) ]

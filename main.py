@@ -19,7 +19,6 @@ FPS = 30
 
 SQUARESTOHIGHLIGHT = []
 ROTATEPOINTS = []
-RESPAWNPOINTS = []
 
 class GameState:
     def __init__(self):
@@ -119,16 +118,16 @@ def handleKeyPress(event, *, gamestate, board):
         ROTATEPOINTS[:] = []
 
     if gamestate.isRespawningNow:
-        RESPAWNPOINTS[:] = board.getFreeRespawnPointsForTeam(gamestate.teamRespawning)
+        respawn_points = board.getFreeRespawnPointsForTeam(gamestate.teamRespawning)
 
-        if clickLoc in RESPAWNPOINTS:
+        if clickLoc in respawn_points:
             if gamestate.teamRespawning == "gold":
                 key = Key(clickLoc, "South", False, "gold")
                 board.addPieceToLocation(clickLoc, key)
             elif gamestate.teamRespawning == "silver":
                 key = Key(clickLoc, "North", False, "silver")
                 board.addPieceToLocation(clickLoc, key)
-            RESPAWNPOINTS[:] = []
+
             gamestate.setRespawnOff()
             board.collapse_locked()
 
@@ -193,7 +192,7 @@ class Screen:
         for location in SQUARESTOHIGHLIGHT:
             Screen._highlightSquare(self._display, (location[1], location[0]), (213,23,12))
 
-        for location in RESPAWNPOINTS:
+        for location in self.board.getFreeRespawnPointsForTeam(self.gamestate.teamRespawning):
             Screen._highlightSquare(self._display, (location[1], location[0]), (233,34,223))
 
         pygame.display.update()
