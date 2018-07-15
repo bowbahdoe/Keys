@@ -77,6 +77,7 @@ def handleKeyPress(*, clickLoc, gamestate):
             SQUARESTOHIGHLIGHT[:] =[]
             ROTATEPOINTS[:] = []
             gamestate.changeTurn()
+            gamestate.pieceSelected = None
 
         elif clickLoc in ROTATEPOINTS:
             def rev_dict(d):
@@ -90,6 +91,7 @@ def handleKeyPress(*, clickLoc, gamestate):
             SQUARESTOHIGHLIGHT[:] =[]
             ROTATEPOINTS[:] = []
             gamestate.changeTurn()
+            gamestate.pieceSelected = None
 
         elif board.isPieceAtLocation(clickLoc) \
             and board.getUnlocked(clickLoc).team == gamestate.teamPlaying:
@@ -196,7 +198,7 @@ class Screen:
 
     def _drawKeyAtLoc(self, display, key, loc):
         if key != None:
-            texture = view.key_texture(key)
+            texture = Screen._key_texture(key)
             texture = pygame.transform.scale(texture, (self._sheight, self._swidth))
             display.blit(texture, (self._swidth*(loc[1]-1), self._sheight*(loc[0]-1)))
 
@@ -237,6 +239,47 @@ class Screen:
             (x * self._swidth, y * self._sheight, self._swidth, self._sheight),
             5
         )
+
+    GOLD_UNLOCKED_TEXTURE = pygame.image.load("img/yellow1.png")
+    SILVER_UNLOCKED_TEXTURE = pygame.image.load("img/silver1.png")
+    GOLD_LOCKED_TEXTURE = pygame.image.load("img/gold_lock.png")
+    SILVER_LOCKED_TEXTURE = pygame.image.load("img/silver_lock.png")
+
+    @staticmethod
+    def _key_texture(key):
+        """Gives the texture to use when rendering a key"""
+        def base_texture(key):
+            if key.team == "gold":
+                if key.isLocked:
+                    return Screen.GOLD_LOCKED_TEXTURE
+                else:
+                    return Screen.GOLD_UNLOCKED_TEXTURE
+            else:
+                if key.isLocked:
+                    return Screen.SILVER_LOCKED_TEXTURE
+                else:
+                    return Screen.SILVER_UNLOCKED_TEXTURE
+
+        def texture_rotation(key):
+            rotation_map = {
+                "East":         { "gold":   45, "silver":  -45 },
+                "SouthEast":    { "gold":  360, "silver":  -90 },
+                "South":        { "gold":  -45, "silver": -135 },
+                "SouthWest":    { "gold":  -90, "silver": -180 },
+                "West":         { "gold": -135, "silver":  135 },
+                "NorthWest":    { "gold": -180, "silver":   90 },
+                "North":        { "gold":  135, "silver":   45 },
+                "NorthEast":    { "gold":   90, "silver":    0 }
+            }
+
+            if key.isLocked:
+                return 0
+            else:
+                return rotation_map[key.direction][key.team]
+
+        texture = base_texture(key)
+        return pygame.transform.rotate(texture, texture_rotation(key))
+
 
 def main():
     gamestate = GameState(Board.default())
