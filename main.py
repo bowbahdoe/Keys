@@ -224,7 +224,6 @@ class Screen:
                     )
 
 
-    @only_cartesian_locations
     def _highlightSquare(self, display, cartesian_loc, color):
         x = cartesian_loc[0] - 1
         y = cartesian_loc[1] - 1
