@@ -92,23 +92,9 @@ def handleKeyPress(*, clickLoc, gamestate, board):
         and not isRespawning:
         gamestate.pieceSelected = clickLoc
         validMoves = board.validMovesOfKeyAtLoc(clickLoc)
-        validMoves.sort()
-        SQUARESTOHIGHLIGHT.sort()
         rotatePrelim = board.getRotatePointsofKeyAtLoc(clickLoc).values()
-        if validMoves != SQUARESTOHIGHLIGHT:
-            SQUARESTOHIGHLIGHT[:] =[]
-            ROTATEPOINTS[:] = []
-        for move in validMoves:
-            if move in SQUARESTOHIGHLIGHT:
-                SQUARESTOHIGHLIGHT.remove(move)
-            else:
-                SQUARESTOHIGHLIGHT.append(move)
-
-        for i in rotatePrelim:
-            if i in ROTATEPOINTS:
-                ROTATEPOINTS.remove(i)
-            else:
-                ROTATEPOINTS.append(i)
+        SQUARESTOHIGHLIGHT[:] = validMoves
+        ROTATEPOINTS[:] = rotatePrelim
 
     elif not isRespawning:
         SQUARESTOHIGHLIGHT[:] = []
