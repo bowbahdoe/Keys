@@ -119,9 +119,8 @@ def handleKeyPress(event, *, gamestate, board):
         ROTATEPOINTS[:] = []
 
     if gamestate.isRespawningNow:
-        for i in board.getFreeRespawnPointsForTeam(gamestate.teamRespawning):
-            if i not in RESPAWNPOINTS:
-                RESPAWNPOINTS.append(makeLocCartesian(i))
+        RESPAWNPOINTS[:] = board.getFreeRespawnPointsForTeam(gamestate.teamRespawning)
+
         if clickLoc in RESPAWNPOINTS:
             if gamestate.teamRespawning == "gold":
                 key = Key(clickLoc, "South", False, "gold")

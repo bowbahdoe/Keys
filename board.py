@@ -5,12 +5,11 @@ from location import makeLocCartesian, only_cartesian_locations, \
     isLocOutOfBounds
 
 class Board:
-    '''Begin the ugliest attempt at making the logic for a chess board in
-        the history of computer science'''
     def __init__(self):
         self._board = collections.defaultdict(
             lambda: { "locked": None, "unlocked": None }
         )
+
 
     def reset(self):
         self._board.clear()
@@ -31,6 +30,17 @@ class Board:
                     silver += 1
 
         return gold == 0 or silver == 0
+
+    @property
+    def winningTeam(self):
+        if not self.isGameOver:
+            return None
+
+        for zone in self._board.values():
+            unlockedPiece = zone["unlocked"]
+            if unlockedPiece != None:
+                return unlockedPiece.team
+
 
     @only_cartesian_locations
     def movePieceToLocation(self, loc, piece):
@@ -173,9 +183,12 @@ class Board:
             return self.getUnlocked(location) == None
 
         if team == "gold":
-            return list(filter(isRespawnFree, gold))
+            points = gold
         else:
-            return list(filter(isRespawnFree, silver))
+            points = silver
+
+        return [ makeLocCartesian(loc) for loc in points
+                                       if isRespawnFree(loc) ]
 
     @classmethod
     def default(cls):
