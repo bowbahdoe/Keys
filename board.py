@@ -120,7 +120,6 @@ class Board:
         key = self.getUnlocked(loc)
 
         if key == None:
-            log.warn("No key at the given location")
             return []
 
         move_fn = movers.get(key.direction)

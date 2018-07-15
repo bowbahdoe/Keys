@@ -15,9 +15,6 @@ DISPLAYWIDTH = 600
 RESOLUTION = (DISPLAYHEIGHT,DISPLAYWIDTH)
 FPS = 30
 
-SQUARESTOHIGHLIGHT = []
-ROTATEPOINTS = []
-
 class GameState:
     def __init__(self, board):
         self.teamRespawning = None
@@ -41,7 +38,7 @@ class GameState:
         else:
             self.teamPlaying = "gold"
 
-def determine_mode(gamestate, board):
+def determine_mode(gamestate):
     """NOTE: Broken with the rest of the implementation.
     Should return the current gamestate for use in making the logic
     more useable from an outside program. """
@@ -52,7 +49,7 @@ def determine_mode(gamestate, board):
 
     if gamestate.isRespawningNow:
         return prefix + "RESPAWNING"
-    elif board.isGameOver:
+    elif gamestate.board.isGameOver:
         return prefix + "WIN"
     else:
         return prefix + "PLAY"
@@ -65,7 +62,7 @@ def handleKeyPress(*, clickLoc, gamestate):
     isRespawning = gamestate.isRespawningNow
 
     if not isRespawning:
-        if clickLoc in SQUARESTOHIGHLIGHT:
+        if clickLoc in board.validMovesOfKeyAtLoc(gamestate.pieceSelected):
             if unlockedPieceAtDest != None:
                 if unlockedPieceAtDest.team != board.getUnlocked(gamestate.pieceSelected).team:
                     board.addLockedPieceToLocation(clickLoc, unlockedPieceAtDest)
@@ -74,12 +71,10 @@ def handleKeyPress(*, clickLoc, gamestate):
                     gamestate.setRespawnOn(lockedPieceAtDest.team)
             board.movePieceToLocation(clickLoc, board.getUnlocked(gamestate.pieceSelected))
 
-            SQUARESTOHIGHLIGHT[:] =[]
-            ROTATEPOINTS[:] = []
             gamestate.changeTurn()
             gamestate.pieceSelected = None
 
-        elif clickLoc in ROTATEPOINTS:
+        elif clickLoc in board.getRotatePointsofKeyAtLoc(gamestate.pieceSelected).values():
             def rev_dict(d):
                 return {v: k for k, v in d.items()}
             direc = rev_dict(board.getRotatePointsofKeyAtLoc(gamestate.pieceSelected))[clickLoc]
@@ -88,22 +83,13 @@ def handleKeyPress(*, clickLoc, gamestate):
             piece.direction = direc
             board.addPieceToLocation(board.getUnlocked(gamestate.pieceSelected).location,
                                      piece)
-            SQUARESTOHIGHLIGHT[:] =[]
-            ROTATEPOINTS[:] = []
             gamestate.changeTurn()
             gamestate.pieceSelected = None
 
         elif board.isPieceAtLocation(clickLoc) \
             and board.getUnlocked(clickLoc).team == gamestate.teamPlaying:
             gamestate.pieceSelected = clickLoc
-            validMoves = board.validMovesOfKeyAtLoc(clickLoc)
-            rotatePrelim = board.getRotatePointsofKeyAtLoc(clickLoc).values()
-            SQUARESTOHIGHLIGHT[:] = validMoves
-            ROTATEPOINTS[:] = rotatePrelim
-
         else:
-            SQUARESTOHIGHLIGHT[:] = []
-            ROTATEPOINTS[:] = []
             gamestate.pieceSelected = None
 
     else:
@@ -184,10 +170,10 @@ class Screen:
         draw(self._unlocked_keys)
 
 
-        for location in ROTATEPOINTS:
+        for location in self.board.getRotatePointsofKeyAtLoc(self.gamestate.pieceSelected).values():
             self._highlightSquare(self._display, (location[1], location[0]), (23,223,12))
 
-        for location in SQUARESTOHIGHLIGHT:
+        for location in self.board.validMovesOfKeyAtLoc(self.gamestate.pieceSelected):
             self._highlightSquare(self._display, (location[1], location[0]), (213,23,12))
 
         for location in self.board.getFreeRespawnPointsForTeam(self.gamestate.teamRespawning):
@@ -240,10 +226,10 @@ class Screen:
             5
         )
 
-    GOLD_UNLOCKED_TEXTURE = pygame.image.load("img/yellow1.png")
-    SILVER_UNLOCKED_TEXTURE = pygame.image.load("img/silver1.png")
-    GOLD_LOCKED_TEXTURE = pygame.image.load("img/gold_lock.png")
-    SILVER_LOCKED_TEXTURE = pygame.image.load("img/silver_lock.png")
+    _GOLD_UNLOCKED_TEXTURE = pygame.image.load("img/yellow1.png")
+    _SILVER_UNLOCKED_TEXTURE = pygame.image.load("img/silver1.png")
+    _GOLD_LOCKED_TEXTURE = pygame.image.load("img/gold_lock.png")
+    _SILVER_LOCKED_TEXTURE = pygame.image.load("img/silver_lock.png")
 
     @staticmethod
     def _key_texture(key):
@@ -251,14 +237,14 @@ class Screen:
         def base_texture(key):
             if key.team == "gold":
                 if key.isLocked:
-                    return Screen.GOLD_LOCKED_TEXTURE
+                    return Screen._GOLD_LOCKED_TEXTURE
                 else:
-                    return Screen.GOLD_UNLOCKED_TEXTURE
+                    return Screen._GOLD_UNLOCKED_TEXTURE
             else:
                 if key.isLocked:
-                    return Screen.SILVER_LOCKED_TEXTURE
+                    return Screen._SILVER_LOCKED_TEXTURE
                 else:
-                    return Screen.SILVER_UNLOCKED_TEXTURE
+                    return Screen._SILVER_UNLOCKED_TEXTURE
 
         def texture_rotation(key):
             rotation_map = {
