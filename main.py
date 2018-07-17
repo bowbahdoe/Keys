@@ -37,6 +37,11 @@ class GameState:
         else:
             self.teamPlaying = "gold"
 
+    @property
+    def validMoves(self):
+        """Returns the valid moves of any selected piece"""
+        return self.board.validMovesOfKeyAtLoc(self.pieceSelected)
+
     def summarize(self):
         return {
             "mode": determine_mode(self),
@@ -67,7 +72,7 @@ def handleKeyPress(*, clickLoc, gamestate):
     isRespawning = gamestate.isRespawningNow
 
     if not isRespawning:
-        if clickLoc in board.validMovesOfKeyAtLoc(gamestate.pieceSelected):
+        if clickLoc in gamestate.validMoves:
             if unlockedPieceAtDest != None:
                 if unlockedPieceAtDest.team != board.getUnlocked(gamestate.pieceSelected).team:
                     board.addLockedPieceToLocation(clickLoc, unlockedPieceAtDest)

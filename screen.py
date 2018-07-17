@@ -68,7 +68,7 @@ class Screen:
         for location in self.board.getRotatePointsofKeyAtLoc(self.gamestate.pieceSelected).values():
             self._highlightSquare(self._display, (location[1], location[0]), (23,223,12))
 
-        for location in self.board.validMovesOfKeyAtLoc(self.gamestate.pieceSelected):
+        for location in self.gamestate.validMoves:
             self._highlightSquare(self._display, (location[1], location[0]), (213,23,12))
 
         for location in self.board.getFreeRespawnPointsForTeam(self.gamestate.teamRespawning):
