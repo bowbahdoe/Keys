@@ -81,9 +81,8 @@ def handleKeyPress(*, clickLoc, gamestate):
     board = gamestate.board
     lockedPieceAtDest = board.getLocked(clickLoc)
     unlockedPieceAtDest = board.getUnlocked(clickLoc)
-    isRespawning = gamestate.isRespawningNow
 
-    if not isRespawning:
+    if not gamestate.isRespawningNow:
         if clickLoc in gamestate.validMoves:
             if unlockedPieceAtDest != None:
                 if unlockedPieceAtDest.team != board.getUnlocked(gamestate.pieceSelected).team:
