@@ -1,4 +1,5 @@
 import collections
+import itertools
 import logging
 from key import Key
 from location import makeLocCartesian, only_cartesian_locations, \
@@ -60,6 +61,12 @@ class Board:
         self._board[loc]["unlocked"] = piece
         piece.location = loc
 
+
+    @staticmethod
+    def all_locations():
+        """Returns an iterator over all the possible cartesian locations
+        on an 8x8 board"""
+        return itertools.product(range(1, 9), range(1, 9))
 
     @only_cartesian_locations
     def addLockedPieceToLocation(self, loc, piece):
@@ -227,7 +234,8 @@ class Board:
         """Returns a JSON-friendly representation of this board"""
         summary = { "unlocked": {}, "locked": {} }
 
-        for location, cell in self._board.items():
+        for location in self.all_locations():
+            cell = self._board[location]
             zero_indexed_location = location[0] - 1, location[1] - 1
 
             unlocked_piece = cell["unlocked"]

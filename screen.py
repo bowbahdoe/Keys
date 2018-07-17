@@ -1,4 +1,3 @@
-import itertools
 import logging
 import pygame
 from pygame.locals import *
@@ -85,20 +84,14 @@ class Screen:
             display.blit(texture, (self._swidth*(loc[1]-1), self._sheight*(loc[0]-1)))
 
     def _drawKeysOnBoard(self, display, board):
-        for loc in Screen._all_locations():
+        for loc in board.all_locations():
             key = board.getUnlocked(loc)
             self._drawKeyAtLoc(display, key, loc)
 
     def _drawLockedKeysOnBoard(self, display, board):
-        for loc in Screen._all_locations():
+        for loc in board.all_locations():
             key = board.getLocked(loc)
             self._drawKeyAtLoc(display, key, loc)
-
-    @staticmethod
-    def _all_locations():
-        """Returns an iterator over all the possible cartesian locations
-        on an 8x8 board"""
-        return itertools.product(range(1, 9), range(1, 9))
 
     def _drawBoard(self, display, color1=(0,0,0), color2=(100,100,100)):
         display.fill(color1)
