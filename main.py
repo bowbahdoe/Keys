@@ -64,6 +64,8 @@ def determine_mode(gamestate):
     else:
         return prefix + "PLAY"
 
+def _rev_dict(d):
+    return {v: k for k, v in d.items()}
 
 def handleKeyPress(*, clickLoc, gamestate):
     board = gamestate.board
@@ -85,9 +87,7 @@ def handleKeyPress(*, clickLoc, gamestate):
             gamestate.pieceSelected = None
 
         elif clickLoc in board.getRotatePointsofKeyAtLoc(gamestate.pieceSelected).values():
-            def rev_dict(d):
-                return {v: k for k, v in d.items()}
-            direc = rev_dict(board.getRotatePointsofKeyAtLoc(gamestate.pieceSelected))[clickLoc]
+            direc = _rev_dict(board.getRotatePointsofKeyAtLoc(gamestate.pieceSelected))[clickLoc]
             piece = board.getUnlocked(gamestate.pieceSelected)
 
             piece.direction = direc
