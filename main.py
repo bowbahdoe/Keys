@@ -48,6 +48,16 @@ class GameState:
             "board": self.board.summarize()
         }
 
+    def reset(self):
+        self.teamRespawning = None
+        self.teamPlaying = "gold"
+        self.pieceSelected = None
+        self.board.reset()
+
+    @property
+    def isGameOver(self):
+        return self.board.isGameOver
+
 def determine_mode(gamestate):
     """NOTE: Broken with the rest of the implementation.
     Should return the current gamestate for use in making the logic
@@ -138,8 +148,8 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        if gamestate.board.isGameOver:
-            gamestate.board.reset()
+        if gamestate.isGameOver:
+            gamestate.reset()
 
         screen.update()
 
