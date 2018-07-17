@@ -37,6 +37,12 @@ class GameState:
         else:
             self.teamPlaying = "gold"
 
+    def summarize(self):
+        return {
+            "mode": determine_mode(self),
+            "board": self.board.summarize()
+        }
+
 def determine_mode(gamestate):
     """NOTE: Broken with the rest of the implementation.
     Should return the current gamestate for use in making the logic
