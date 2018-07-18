@@ -3,7 +3,7 @@ import itertools
 import logging
 from key import Key
 from location import makeLocCartesian, only_cartesian_locations, \
-    isLocOutOfBounds
+    is_out_of_bounds
 
 class Board:
     def __init__(self):
@@ -138,7 +138,7 @@ class Board:
         available_moves = []
         next_loc = move_fn(*loc)
         while True:
-            if isLocOutOfBounds(next_loc):
+            if is_out_of_bounds(next_loc):
                 return available_moves
 
             elif self.getUnlocked(next_loc) == None:
@@ -174,7 +174,7 @@ class Board:
 
         rotate_map.pop(key.direction, None)
         for direction, location in list(rotate_map.items()):
-            if isLocOutOfBounds(location):
+            if is_out_of_bounds(location):
                 rotate_map.pop(direction, None)
 
         return rotate_map
