@@ -92,11 +92,11 @@ class Board:
 
     @only_cartesian_locations
     def isPieceAtLocation(self, loc):
-        return self.getUnlocked(loc) != None
+        return self.getUnlocked(loc) is not None
 
     @only_cartesian_locations
     def isLockedPieceAtLocation(self, loc):
-        return self.getLocked(loc) != None
+        return self.getLocked(loc) is not None
 
     @only_cartesian_locations
     def getUnlocked(self, loc):
@@ -126,12 +126,12 @@ class Board:
 
         key = self.getUnlocked(loc)
 
-        if key == None:
+        if key is None:
             return []
 
         move_fn = movers.get(key.direction)
 
-        if move_fn == None:
+        if move_fn is None:
             log.warn("Invalid key direction given: %s", key.direction)
             return []
 
@@ -141,7 +141,7 @@ class Board:
             if is_out_of_bounds(next_loc):
                 return available_moves
 
-            elif self.getUnlocked(next_loc) == None:
+            elif self.getUnlocked(next_loc) is None:
                 available_moves.append(next_loc)
                 next_loc = move_fn(*next_loc)
 
@@ -154,7 +154,6 @@ class Board:
 
     @only_cartesian_locations
     def getRotatePointsofKeyAtLoc(self, loc):
-        log = logging.getLogger(__name__)
         key = self.getUnlocked(loc)
 
         if key == None:
@@ -226,7 +225,7 @@ class Board:
         for cell in self._board.values():
             unlockedPiece = cell["unlocked"]
             lockedPiece = cell["locked"]
-            if unlockedPiece != None and lockedPiece != None:
+            if unlockedPiece is not None and lockedPiece is not None:
                 if lockedPiece.team == unlockedPiece.team:
                     cell["locked"] = None
 
@@ -239,14 +238,14 @@ class Board:
             zero_indexed_location = location[0] - 1, location[1] - 1
 
             unlocked_piece = cell["unlocked"]
-            if unlocked_piece != None:
+            if unlocked_piece is not None:
                 summary["unlocked"][zero_indexed_location] = {
                     "team": unlocked_piece.team,
                     "direction": unlocked_piece.direction.lower()
                 }
 
             locked_piece = cell["locked"]
-            if locked_piece != None:
+            if locked_piece is not None:
                 summary["locked"][zero_indexed_location] = {
                     "team": locked_piece.team
                 }
