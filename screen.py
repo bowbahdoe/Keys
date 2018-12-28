@@ -21,7 +21,7 @@ class Screen:
         log = logging.getLogger(__name__)
         log.debug("User clicked at %s", event.pos)
         clickX, clickY = event.pos
-        board_location = (clickY // self._sheight + 1, clickX // self._swidth + 1)
+        board_location = (clickY // self._sheight, clickX // self._swidth )
         log.debug("Click Interpreted as being at %s", board_location)
         return board_location
 
@@ -81,7 +81,7 @@ class Screen:
         if key != None:
             texture = Screen._key_texture(key)
             texture = pygame.transform.scale(texture, (self._sheight, self._swidth))
-            display.blit(texture, (self._swidth*(loc[1]-1), self._sheight*(loc[0]-1)))
+            display.blit(texture, (self._swidth*(loc[1]), self._sheight*(loc[0])))
 
     def _drawKeysOnBoard(self, display, board):
         for loc in board.all_locations():
@@ -106,8 +106,8 @@ class Screen:
 
 
     def _highlightSquare(self, display, cartesian_loc, color):
-        x = cartesian_loc[0] - 1
-        y = cartesian_loc[1] - 1
+        x = cartesian_loc[0]
+        y = cartesian_loc[1]
         pygame.draw.rect(
             display,
             color,

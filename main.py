@@ -14,6 +14,9 @@ DISPLAYWIDTH = 600
 RESOLUTION = (DISPLAYHEIGHT,DISPLAYWIDTH)
 FPS = 30
 
+def _rev_dict(d):
+    return {v: k for k, v in d.items()}
+
 def determine_move(*, clickLoc, gamestate):
     board = gamestate.board
 

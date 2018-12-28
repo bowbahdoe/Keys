@@ -66,7 +66,7 @@ class Board:
     def all_locations():
         """Returns an iterator over all the possible cartesian locations
         on an 8x8 board"""
-        return itertools.product(range(1, 9), range(1, 9))
+        return itertools.product(range(0, 8), range(0, 8))
 
     @only_cartesian_locations
     def addLockedPieceToLocation(self, loc, piece):
@@ -231,23 +231,24 @@ class Board:
 
     def summarize(self):
         """Returns a JSON-friendly representation of this board"""
-        summary = { "unlocked": {}, "locked": {} }
+        summary = { "unlocked": [], "locked": [] }
 
         for location in self.all_locations():
             cell = self._board[location]
-            zero_indexed_location = location[0] - 1, location[1] - 1
 
             unlocked_piece = cell["unlocked"]
             if unlocked_piece is not None:
-                summary["unlocked"][zero_indexed_location] = {
+                summary["unlocked"].append({
+                    "location": {"x": location[0], "y": location[1]},
                     "team": unlocked_piece.team,
                     "direction": unlocked_piece.direction.lower()
-                }
+                })
 
             locked_piece = cell["locked"]
             if locked_piece is not None:
-                summary["locked"][zero_indexed_location] = {
+                summary["locked"].append({
+                    "location": {"x": location[0], "y": location[1]},
                     "team": locked_piece.team
-                }
+                })
 
         return summary

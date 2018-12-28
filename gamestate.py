@@ -1,8 +1,10 @@
+from key import Key
+
 class GameState:
     def __init__(self, board):
         self.teamRespawning = None
         self.teamPlaying = "gold"
-        self.pieceSelected = None
+        self.pieceSelected = None # NOTE: Relic from the click interface. Should be factored out.
         self.board = board
 
     def setRespawnOn(self,team):
@@ -26,9 +28,12 @@ class GameState:
         """Returns the valid moves of any selected piece"""
         return self.board.validMovesOfKeyAtLoc(self.pieceSelected)
 
+    def validMovesOfKeyAtLoc(self, loc):
+        return self.board.validMovesOfKeyAtLoc(loc)
+
     def summarize(self):
         return {
-            "mode": determine_mode(self),
+            "mode": _determine_mode(self),
             "board": self.board.summarize()
         }
 
@@ -46,7 +51,7 @@ class GameState:
     def winningTeam(self):
         return self.board.winningTeam
 
-def determine_mode(gamestate):
+def _determine_mode(gamestate):
     """NOTE: As of writing, makes use of some hacks. Be sure to clean up
     the logic here more."""
     if gamestate.teamPlaying == "gold":
@@ -61,9 +66,10 @@ def determine_mode(gamestate):
     else:
         return prefix + "PLAY"
 
-def _rev_dict(d):
-    return {v: k for k, v in d.items()}
-
+# NOTE: I made all of these callables since I didn't think that they made much
+# sense as part of the "GameState" object becuse it had so many other methods
+# but even now, a few hours after writing, that doesn't really track with me.
+# So yeah, revisit later.
 class Move:
     def __init__(self, *, team, from_, to):
         self._team = team
@@ -80,7 +86,7 @@ class Move:
             return
 
         if not gamestate.isRespawningNow and not gamestate.isGameOver:
-            if self._to in gamestate.validMoves:
+            if self._to in gamestate.validMovesOfKeyAtLoc(self._from):
                 if unlockedPieceAtDest is not None:
                     if unlockedPieceAtDest.team != unlockedPieceAtSource.team:
                         board.addLockedPieceToLocation(self._to, unlockedPieceAtDest)
